@@ -1,0 +1,24 @@
+.item-card-container, .game-card-container {
+	position: relative;
+}
+.badge {
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 30px;
+	width: 30px;
+	opacity: 0;
+	transition: opacity .5s ease;
+}
+.item-card-container:hover .badge, .game-card-container:hover .badge {
+	opacity: 1;
+}
+.badge img {
+	height: 100%;
+	width: 100%;
+}
+@media screen and (max-width: 1195px) {
+	.badge {
+		opacity: 1;
+	}
+}

@@ -1,0 +1,109 @@
+.badge-container .container-header {
+	display: flex;
+	flex-direction: column;
+}
+.badge-container.badge-grid > ul {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+.badge-search {
+	margin: 1rem 0;
+	width: calc(100% - 12px * 2 - 2px * 2);
+}
+.badge-selectors-container {
+	display: flex;
+	width: 100%;
+}
+#badge-filter {
+	width: calc(100% - 1rem * 2);
+}
+#badge-sort {
+	margin: 0 1rem;
+	background: none;
+}
+.dark-theme #badge-sort img {
+	filter: invert(1);
+}
+
+
+.badge-owned-container {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+.badge-owned-container span {
+	margin: .5rem;
+	padding: .25rem;
+	border-radius: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: calc(1.75rem - .25rem * 2);
+	width: calc(1.75rem - .25rem * 2);
+	color: #FFF;
+	background: red;
+	position: relative;
+}
+.badge-owned-container span.owned {
+	background: green;
+}
+.badge-owned-container span .text-label {
+	position: absolute;
+	bottom: calc(100% + .5rem);
+	width: max-content;
+	max-width: 15rem;
+	padding: .5rem;
+	border-radius: .5rem;
+	background: #333;
+	color: #FFF;
+	text-align: center;
+	opacity: 0;
+	z-index: -1;
+	transition: opacity .5s ease;
+}
+.badge-owned-container span .text-label::after {
+	content: "";
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-top: 10px solid #FFF;
+	bottom: -10px;
+	height: 0;
+	width: 0;
+	left: calc(50% - 10px);
+	position: absolute;
+}
+.badge-owned-container span .text-label::after {
+	border-top: 10px solid #333;
+}
+.light-theme .badge-owned-container span .text-label {
+	background: #bdbebe;
+	color: #232527;
+}
+.light-theme .badge-owned-container span .text-label::after {
+	border-top: 10px solid #bdbebe;
+}
+.badge-owned-container span:hover .text-label {
+	opacity: 1;
+	z-index: 1;
+}
+.container-header {
+	position: relative;
+}
+.badge-row[badge-id] {
+	position: relative;
+}
+.badge-container.badge-grid > ul .badge-row[badge-id] {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 20rem;
+	margin: 1rem;
+	text-align: center;
+}
+.badge-container.badge-grid > ul .badge-row[badge-id] .badge-content {
+	width: 100%;
+}
+.badge-row[active="false"] {
+	display: none;
+}

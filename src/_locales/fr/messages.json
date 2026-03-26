@@ -1,0 +1,80 @@
+{
+	"name": {
+		"message": "Better Roblox Badges"
+	},
+	"description": {
+		"message": "Améliorer la manière dont les badges sont afficher sur la page de Roblox"
+	},
+	"day": {
+		"message": "Dimanche/Lundi/Mardi/Mercredi/Jeudi/Vendredi/Samedi"
+	},
+	"month": {
+		"message": "Janvier/Fevrier/Mars/Avril/Mai/Juin/Juillet/Août/Septembre/Octobre/Novembre/Décembre"
+	},
+	"badges_not_filtered": {
+		"message": "Afficher tous les badges"
+	},
+	"badges_owned_only": {
+		"message": "Cacher les badges non-obtenu"
+	},
+	"badges_not_owned_only": {
+		"message": "Cacher les badges obtenu"
+	},
+	"badges_view_as": {
+		"message": "Voir avec le compte d'un ami"
+	},
+	"badges_search": {
+		"message": "Chercher"
+	},
+	"badges_total": {
+		"message": "Total : "
+	},
+	"badges_rarity": {
+		"message": "Rareté"
+	},
+	"badges_won_yesterday": {
+		"message": "Gagné hier"
+	},
+	"badges_won_ever": {
+		"message": "Total gagné"
+	},
+	"options_title": {
+		"message": "Paramètres"
+	},
+	"options_back": {
+		"message": "Retour"
+	},
+	"options_basic": {
+		"message": "Basique"
+	},
+	"options_dates_format": {
+		"message": "Format des dates"
+	},
+	"options_date_small_us": {
+		"message": "Américain, réduit"
+	},
+	"options_date_small_default": {
+		"message": "Défaut, réduit"
+	},
+	"options_date_full_us": {
+		"message": "Américain, complet"
+	},
+	"options_date_full_default": {
+		"message": "Défaut, complet"
+	},
+	"options_split_number": {
+		"message": "Séparer les nombres par"
+	},
+	"options_split_number_off": {
+		"message": "Rien"
+	},
+	"options_split_number_dot": {
+		"message": "Point"
+	},
+	"options_split_number_space": {
+		"message": "Espace"
+	},
+	"options_load_all_badges": {
+		"message": "Charger tous les badges automatiquement"
+	}
+}

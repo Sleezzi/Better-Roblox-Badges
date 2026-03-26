@@ -1,0 +1,80 @@
+{
+	"name": {
+		"message": "Better Roblox Badges"
+	},
+	"description": {
+		"message": "Melhore a forma como os emblemas são apresentados na página do Roblox"
+	},
+	"day": {
+		"message": "Domingo/Segunda/Terça/Quarta/Quinta/Sexta/Sábado"
+	},
+	"month": {
+		"message": "Janeiro/Fevereiro/Março/Abril/Maio/Junho/Julho/Agosto/Setembro/Outubro/Novembro/Dezembro"
+	},
+	"badges_not_filtered": {
+		"message": "Mostrar todos os emblemas"
+	},
+	"badges_owned_only": {
+		"message": "Ocultar emblemas não conquistados"
+	},
+	"badges_not_owned_only": {
+		"message": "Ocultar emblemas obtidos"
+	},
+	"badges_view_as": {
+		"message": "Ver com a conta de um amigo"
+	},
+	"badges_search": {
+		"message": "Para pesquisar"
+	},
+	"badges_total": {
+		"message": "Total: "
+	},
+	"badges_rarity": {
+		"message": "Raridade"
+	},
+	"badges_won_yesterday": {
+		"message": "Ganhou ontem"
+	},
+	"badges_won_ever": {
+		"message": "Total ganho"
+	},
+	"options_title": {
+		"message": "Configurações"
+	},
+	"options_back": {
+		"message": "Voltar"
+	},
+	"options_basic": {
+		"message": "Básico"
+	},
+	"options_dates_format": {
+		"message": "Formato de data"
+	},
+	"options_date_small_us": {
+		"message": "Americano, reduzido"
+	},
+	"options_date_small_default": {
+		"message": "Padrão, reduzido"
+	},
+	"options_date_full_us": {
+		"message": "Americano, completo"
+	},
+	"options_date_full_default": {
+		"message": "Defeito, completo"
+	},
+	"options_split_number": {
+		"message": "Separe os números por"
+	},
+	"options_split_number_off": {
+		"message": "Nada"
+	},
+	"options_split_number_dot": {
+		"message": "Apontar"
+	},
+	"options_split_number_space": {
+		"message": "Espaço"
+	},
+	"options_load_all_badges": {
+		"message": "Carregar todos os emblemas automaticamente"
+	}
+}

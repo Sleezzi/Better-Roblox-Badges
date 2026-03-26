@@ -1,0 +1,80 @@
+{
+	"name": {
+		"message": "Better Roblox Badges"
+	},
+	"description": {
+		"message": "Улучшить отображение значков на странице Roblox."
+	},
+	"day": {
+		"message": "Воскресенье/Понедельник/Вторник/Среда/Четверг/Пятница/Суббота"
+	},
+	"month": {
+		"message": "Январь/Февраль/Март/Апрель/Май/Июнь/Июль/Август/Сентябрь/Октябрь/Ноябрь/Декабрь"
+	},
+	"badges_not_filtered": {
+		"message": "Показать все значки"
+	},
+	"badges_owned_only": {
+		"message": "Скрыть незаработанные значки"
+	},
+	"badges_not_owned_only": {
+		"message": "Скрыть полученные значки"
+	},
+	"badges_view_as": {
+		"message": "Просмотреть с помощью учетной записи друга"
+	},
+	"badges_search": {
+		"message": "Искать"
+	},
+	"badges_total": {
+		"message": "Общий : "
+	},
+	"badges_rarity": {
+		"message": "Редкость"
+	},
+	"badges_won_yesterday": {
+		"message": "Выиграл вчера"
+	},
+	"badges_won_ever": {
+		"message": "Всего выиграно"
+	},
+	"options_title": {
+		"message": "Настройки"
+	},
+	"options_back": {
+		"message": "Назад"
+	},
+	"options_basic": {
+		"message": "Базовый"
+	},
+	"options_dates_format": {
+		"message": "Формат даты"
+	},
+	"options_date_small_us": {
+		"message": "Американский, уменьшенный"
+	},
+	"options_date_small_default": {
+		"message": "По умолчанию, уменьшено"
+	},
+	"options_date_full_us": {
+		"message": "Американский, полный"
+	},
+	"options_date_full_default": {
+		"message": "Дефект, полный"
+	},
+	"options_split_number": {
+		"message": "Разделите числа на"
+	},
+	"options_split_number_off": {
+		"message": "Ничего"
+	},
+	"options_split_number_dot": {
+		"message": "Точка"
+	},
+	"options_split_number_space": {
+		"message": "Космос"
+	},
+	"options_load_all_badges": {
+		"message": "Загрузить все значки автоматически"
+	}
+}

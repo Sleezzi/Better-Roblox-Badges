@@ -1,0 +1,23 @@
+{
+  "name": "better-roblox-badges",
+  "version": "1.0.5",
+  "description": "Improve the display of Roblox badges on the site.",
+  "license": "ISC",
+  "author": "Sleezzi",
+  "type": "commonjs",
+  "scripts": {
+    "build": "node builder.js --debug",
+    "watch": "nodemon --ext tsx,ts,json,css --watch src --ignore node_modules --ignore build --exec \"npm run build\""
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.322",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "esbuild": "^0.25.4",
+    "nodemon": "^3.1.10"
+  },
+  "dependencies": {
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  }
+}

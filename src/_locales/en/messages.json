@@ -1,0 +1,80 @@
+{
+	"name": {
+		"message": "Better Roblox Badges"
+	},
+	"description": {
+		"message": "Improve how Roblox shows you game badges"
+	},
+	"day": {
+		"message": "Sunday/Monday/Thuesday/Wednesday/Thursday/Friday/Saturday"
+	},
+	"month": {
+		"message": "January/February/March/April/May/June/July/August/September/October/November/December"
+	},
+	"badges_not_filtered": {
+		"message": "Show all"
+	},
+	"badges_owned_only": {
+		"message": "Owned only"
+	},
+	"badges_not_owned_only": {
+		"message": "Not owned only"
+	},
+	"badges_view_as": {
+		"message": "View with friend's account"
+	},
+	"badges_total": {
+		"message": "Total: "
+	},
+	"badges_rarity": {
+		"message": "Rarity"
+	},
+	"badges_won_yesterday": {
+		"message": "Won Yesterday"
+	},
+	"badges_won_ever": {
+		"message": "Won Ever"
+	},
+	"options_title": {
+		"message": "Settings"
+	},
+	"options_back": {
+		"message": "Back"
+	},
+	"options_basic": {
+		"message": "Basic"
+	},
+	"options_dates_format": {
+		"message": "Date format"
+	},
+	"options_date_small_us": {
+		"message": "American, reduced"
+	},
+	"options_date_small_default": {
+		"message": "Default, reduced"
+	},
+	"options_date_full_us": {
+		"message": "Americain, full"
+	},
+	"options_date_full_default": {
+		"message": "Default, full"
+	},
+	"options_load_all_badges": {
+		"message": "Load all badges automatically"
+	},
+	"options_split_number": {
+		"message": "Split numbers by"
+	},
+	"options_split_number_off": {
+		"message": "Nothing"
+	},
+	"options_split_number_dot": {
+		"message": "Dot"
+	},
+	"options_split_number_space": {
+		"message": "Space"
+	},
+	"badges_search": {
+		"message": "Search"
+	}
+}
