@@ -6,7 +6,7 @@
   "author": "Sleezzi",
   "type": "commonjs",
   "scripts": {
-    "build": "node builder.js --debug",
+    "build": "node builder.js --minify",
     "watch": "nodemon --ext tsx,ts,json,css --watch src --ignore node_modules --ignore build --exec \"npm run build\""
   },
   "devDependencies": {

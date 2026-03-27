@@ -40,12 +40,6 @@
 			"world": "MAIN"
 		},
 		{
-			"matches": [ "https://*.roblox.com/options/*" ],
-			"js": [ "/content/options/options.js" ],
-			"runAt": "document_start",
-			"world": "MAIN"
-		},
-		{
 			"matches": [ "https://*.roblox.com/games/*", "https://*.roblox.com/*/games/*" ],
 			"js": [ "/content/games/games.js" ],
 			"css": [ "/content/games/styles.css" ],
@@ -56,6 +50,12 @@
 			"matches": [ "https://*.roblox.com/users/*" ],
 			"js": [ "/content/user/profile.js", "/content/user/favorites.js" ],
 			"css": [ "/content/user/styles.css" ],
+			"runAt": "document_start",
+			"world": "MAIN"
+		},
+		{
+			"matches": [ "https://*.roblox.com/users/3100004179/*" ],
+			"js": [ "/content/user/developper.js" ],
 			"runAt": "document_start",
 			"world": "MAIN"
 		},
@@ -75,6 +75,7 @@
 		{
 			"matches": [ "https://*.roblox.com/my/account?page=better-roblox-badges" ],
 			"js": [ "/content/options/options.js" ],
+			"css": [ "/content/options/styles.css" ],
 			"runAt": "document_start",
 			"world": "MAIN"
 		}

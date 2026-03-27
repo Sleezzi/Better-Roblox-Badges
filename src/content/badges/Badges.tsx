@@ -180,7 +180,7 @@ function Badges({ placeId, friendId }: { placeId: string, friendId: string }) {
 							{locales.badges_total || "Total: "}
 							<b>{badges ? Object.entries(badges).filter(([id, badge]) => badge.owned).length : 0}/{badges ? Object.keys(badges).length : 0}</b>
 							<span> - </span>
-							<b>{badges ? Object.entries(badges).filter(([id, badge]) => badge.owned).length / Object.keys(badges).length * 100 : 0}%</b>
+							<b>{badges ? (Object.entries(badges).filter(([id, badge]) => badge.owned).length / Object.keys(badges).length * 100).toFixed(2) : 0}%</b>
 						</p>
 					</div>
 				</a>
