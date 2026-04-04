@@ -9,7 +9,7 @@
 		"outDir": "./build",
 		"noEmitOnError": true,
 		"typeRoots": [ "node_modules/@types" ],
-		"types": ["chrome"]
+		"types": ["webextension-polyfill"]
 	},
 	"include": [
 		"src/**/*"

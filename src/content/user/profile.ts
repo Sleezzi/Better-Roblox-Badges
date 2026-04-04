@@ -1,8 +1,11 @@
 /// <reference path="../../../types/Window.d.ts" />
 
+import awaitForElement from "../../components/awaitForElement";
+import extension from "../../components/extension";
+
 (async () => {
 	if (!window.location.href.endsWith("/profile")) return;
-	const container = await window.sleezzi.awaitForElement(".container-list.favorite-games-container .hlist.game-cards");
+	const container = await awaitForElement(".container-list.favorite-games-container .hlist.game-cards");
 	if (!container) return;
 	const userId = window.location.href.split("/")[4];
 	for (const element of container.querySelectorAll("li.list-item.game-card.game-tile div.game-card-container" as "div")) {
@@ -13,7 +16,7 @@
 		element.appendChild(button);
 
 		const icon = document.createElement("img");
-		icon.src = (await window.sleezzi.api("extension")).icons[128];
+		icon.src = extension.icons[128];
 		button.appendChild(icon);
 	}
 })();

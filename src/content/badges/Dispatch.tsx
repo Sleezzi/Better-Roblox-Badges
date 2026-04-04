@@ -2,9 +2,12 @@ import { createRoot } from "react-dom/client";
 
 import Friends from "./Friends";
 import Badges from "./Badges";
+import _userId from "../../components/userId";
+import awaitForElement from "../../components/awaitForElement";
+import extension from "../../components/extension";
 
 (async () => {
-	const page = await window.sleezzi.awaitForElement<"div">("#content");
+	const page = await awaitForElement<"div">("#content");
 	if (!page) return;
 	page.innerHTML = "";
 
@@ -12,7 +15,7 @@ import Badges from "./Badges";
 	const user = window.location.href.split("/")[6];
 
 
-	const userId = await window.sleezzi.userId();
+	const userId = await _userId();
 	if (!userId) return;
 	const root = createRoot(page);
 
@@ -21,5 +24,5 @@ import Badges from "./Badges";
 	} else {
 		root.render(<Friends placeId={place} userId={userId} />);
 	}
-	document.title = `Roblox - ${(await window.sleezzi.api("extension")).name}`;
+	document.title = `Roblox - ${extension.name}`;
 })();

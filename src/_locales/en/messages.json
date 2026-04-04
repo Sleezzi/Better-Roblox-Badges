@@ -23,6 +23,9 @@
 	"badges_view_as": {
 		"message": "View with friend's account"
 	},
+	"badges_search": {
+		"message": "Search"
+	},
 	"badges_total": {
 		"message": "Total: "
 	},
@@ -34,6 +37,9 @@
 	},
 	"badges_won_ever": {
 		"message": "Won Ever"
+	},
+	"badges_badges": {
+		"message": "Badges"
 	},
 	"options_title": {
 		"message": "Settings"
@@ -73,8 +79,5 @@
 	},
 	"options_split_number_space": {
 		"message": "Space"
-	},
-	"badges_search": {
-		"message": "Search"
 	}
 }

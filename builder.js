@@ -4,12 +4,13 @@ const { join } = require("path");
 
 const src = process.env.BUILDER_SOURCE || join(__dirname, "./src");
 const dist = process.env.BUILDER_DIST || join(__dirname, "./build");
+const manifest = process.env.BUILDER_MANIFEST || join(__dirname, "./manifest.base.json");
 
 const filters = [
 	dist,
 	new RegExp(`^${dist}.*`),
 	/\.tsx$/,
-	/\.md$/,
+	`${src}/manifest.json`,
 ];
 
 const output = {
@@ -58,12 +59,31 @@ const navigate = async (path) => {
 		}
 	}
 }
+
+const buildManifest = async () => {
+	const target = process.argv.find((opt) => opt.startsWith("--target"))?.split("=")[1] || "chrome";
+	if (target !== "chrome" && target !== "firefox") {
+		throw new Error("Invalid target: " + target + "\nValid targets are: chrome, firefox");
+	}
+
+	const base = JSON.parse(await readFile(manifest));
+
+	const result = {...base.base};
+	for (const key in base.targets[target]) {
+		result[key] = base.targets[target][key];
+	}
+	
+	await appendFile(`${dist}/manifest.json`, JSON.stringify(result));
+}
 (async () => {
 	if (!await exist(src)) {
 		throw new Error("Invalid source: Do not exist!");
 	}
 	if (!(await stat(src)).isDirectory()) {
 		throw new Error("Invalid source: Not a directory!");
+	}
+	if (!await exist(manifest)) {
+		throw new Error("Invalid source: manifest.base.json do not exist!");
 	}
 
 	if (await exist(dist)) {
@@ -72,6 +92,9 @@ const navigate = async (path) => {
 	await mkdir(dist);
 
 	await navigate(src);
+	buildManifest().then(() => {
+		output.files += 1;
+	});
 
 	esbuild.buildSync({
 		entryPoints: [`${src}/**/*.ts`, `${src}/**/*.tsx`],
@@ -89,7 +112,7 @@ const navigate = async (path) => {
 		format: "iife",
 		tsconfig: "./tsconfig.json",
 		define: {
-			"process.env.NODE_ENV": JSON.stringify(process.argv.find((opt) => opt === "--debug") ? "development" : "production") // 👈 fix ici
+			"process.env.NODE_ENV": JSON.stringify(process.argv.find((opt) => opt === "--debug") ? "development" : "production")
 		},
 		write: true
 	});

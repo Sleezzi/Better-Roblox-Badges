@@ -38,6 +38,9 @@
 	"badges_won_ever": {
 		"message": "Total gagné"
 	},
+	"badges_badges": {
+		"message": "Badges"
+	},
 	"options_title": {
 		"message": "Ajustes"
 	},

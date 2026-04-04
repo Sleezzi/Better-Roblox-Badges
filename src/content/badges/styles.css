@@ -78,7 +78,7 @@
 	margin: 6px 0 0;
 	padding: 0 12px
 }
-#badge-filter {
+#badges-filter {
 	margin: 1rem .5rem;
 	width: calc(100% - .5rem * 2);
 }

@@ -35,13 +35,18 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	--color: currentColor;
 }
-#developper-section .metadata .links a svg {
+#developper-section .metadata .links a span {
 	height: 100%;
 	width: 100%;
-	transition: color .5s ease, transform 1s ease;
+	mask-position: center !important;
+	mask-size: cover !important;
+	mask-repeat: no-repeat !important;
+	background: white;
+	transition: background .5s ease, transform 1s ease;
 }
-#developper-section .metadata .links a:hover svg {
-	color: var(--color);
+#developper-section .metadata .links a:hover span {
+	background: var(--color);
 	transform: translate(0, -.5rem) rotateY(360deg);
 }

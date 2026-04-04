@@ -26,6 +26,9 @@
 	"badges_search": {
 		"message": "Искать"
 	},
+	"badges_badges": {
+		"message": "Badges"
+	},
 	"badges_total": {
 		"message": "Общий : "
 	},

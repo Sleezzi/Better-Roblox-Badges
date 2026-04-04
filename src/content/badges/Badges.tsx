@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
-import Select from "../components/Select";
-import ParseDate from "../components/ParseDate";
-import Loading from "../components/Loading";
+import Select from "../../components/react/Select";
+import ParseDate from "../../components/parseDate";
+import Loading from "../../components/react/Loading";
+import Translates from "../../components/translates";
+import getDetails from "../../components/api/user/getDetails";
+import getAvatar from "../../components/api/user/getAvatar";
+import splitNumber from "../../components/splitNumber";
+import Icon from "../../components/react/Icon";
 
 type Badge = {
 	thumbnail: string | null,
@@ -19,7 +24,7 @@ type Badge = {
 const localesToGet = ["badges_total", "badges_rarity", "badges_won_yesterday", "badges_won_ever", "badges_search", "badges_not_filtered", "badges_owned_only", "badges_not_owned_only"];
 
 function Badges({ placeId, friendId }: { placeId: string, friendId: string }) {
-	const [profil, setProfil] = useState<{
+	const [profile, setProfile] = useState<{
 		displayName?: string;
 		name?: string;
 		avatar?: string;
@@ -30,25 +35,23 @@ function Badges({ placeId, friendId }: { placeId: string, friendId: string }) {
 	const [index, setIndex] = useState<string>("");
 	const [badges, setBadges] = useState<{ [id: number]: Badge } | null>(null);
 
-	const [locales, setLocales] = useState<{ [name: string]: string }>({});
+	const [locales, setLocales] = useState<{ [name: string]: string | null }>({});
 
 	useEffect(() => {
-		for (const locale of localesToGet) {
-			window.sleezzi.translate(locale).then((value) => setLocales((old) => ({...old, [locale]: value})));
-		}
+		setLocales(Translates(localesToGet));
 	}, []);
 
 	useEffect(() => {
-		window.sleezzi.roblox.user.detail(friendId)
-		.then((user) => setProfil((old: any) => ({ ...old,
+		getDetails(friendId)
+		.then((user) => setProfile((old: any) => ({ ...old,
 			name: user.name,
 			displayName: user.displayName,
 			hasVerifiedBadge: user.hasVerifiedBadge,
 			isBanned: user.isBanned
 		})));
-		
-		window.sleezzi.roblox.user.avatar.headshot(150, "png", [friendId])
-		.then((avatars) => setProfil((old: any) => ({ ...old, avatar: avatars[friendId as any] })));
+
+		getAvatar(150, "png", [friendId])
+		.then((avatars) => setProfile((old: any) => ({ ...old, avatar: avatars[friendId as any] })));
 	}, [friendId]);
 
 	useEffect(() => {
@@ -159,44 +162,46 @@ function Badges({ placeId, friendId }: { placeId: string, friendId: string }) {
 	return (
 		<>
 			<a href={`https://www.roblox.com/users/${friendId}/profile`} className="profile-header-main">
-					{
-						profil.avatar ?
-						<img className="avatar" src={profil.avatar} alt={`${profil.displayName}'s avatar`} title={`${profil.displayName}'s avatar`} />
-						:
-						<Loading className="avatar" />
-					}
-					<div className="profile-header-details">
-						<span className="user-display-name">
-							{
-								profil.displayName || <Loading style={{height: "1.5rem", width: "10rem"}} />
-							}
-						</span>
-						<span className="user-name web-blox-css-tss-zzwi3a-Typography-body1-Typography-colorSecondary-Typography-root profile-header-username">
-							{
-								profil.name ? `@${profil.name}` : <Loading style={{height: ".75rem", width: "5rem"}} />
-							}
-						</span>
-						<p className="user-description">
-							{locales.badges_total || "Total: "}
-							<b>{badges ? Object.entries(badges).filter(([id, badge]) => badge.owned).length : 0}/{badges ? Object.keys(badges).length : 0}</b>
-							<span> - </span>
-							<b>{badges ? (Object.entries(badges).filter(([id, badge]) => badge.owned).length / Object.keys(badges).length * 100).toFixed(2) : 0}%</b>
-						</p>
-					</div>
+				{
+					profile.avatar ?
+					<img className="avatar" src={profile.avatar} alt={`${profile.displayName}'s avatar`} title={`${profile.displayName}'s avatar`} />
+					:
+					<Loading className="avatar" />
+				}
+				<div className="profile-header-details">
+					<span className="user-display-name">
+						{
+							profile.displayName || <Loading style={{height: "1.5rem", width: "10rem"}} />
+						}
+					</span>
+					<span className="user-name web-blox-css-tss-zzwi3a-Typography-body1-Typography-colorSecondary-Typography-root profile-header-username">
+						{
+							profile.name ? `@${profile.name}` : <Loading style={{height: ".75rem", width: "5rem"}} />
+						}
+					</span>
+					<p className="user-description">
+						{locales.badges_total || "Total: "}
+						<b>{badges ? Object.entries(badges).filter(([id, badge]) => badge.owned).length : 0}/{badges ? Object.keys(badges).length : 0}</b>
+						<span> - </span>
+						<b>{badges ? (Object.entries(badges).filter(([id, badge]) => badge.owned).length / Object.keys(badges).length * 100).toFixed(2) : 0}%</b>
+					</p>
+				</div>
+				<a href={`/better-badges/${placeId}/`} style={{height: "1.5rem", width: "1.5rem"}}>
+					<Icon color="white" icon="arrow-right-left.png" />
 				</a>
+			</a>
 			<input
 				{...{"data-testid": "navigation-search-input-field"}}
 				type="search"
 				className="input-field new-input-field badge-search"
 				autoComplete="off"
-				placeholder={locales.badges_search}
+				placeholder={locales.badges_search || "Search"}
 				maxLength={120}
 				onInput={(e: any) => {
 					if (!badges) return;
 					const result = {...badges};
 					const research = e.target.value.toLowerCase();
 					if (!research) return;
-
 
 					for (const [id, badge] of Object.entries(badges)) {
 						if (research.length === 0) {
@@ -216,7 +221,7 @@ function Badges({ placeId, friendId }: { placeId: string, friendId: string }) {
 					setBadges(result);
 				}}
 			/>
-			<Select name="" options={
+			<Select name="" container={{id: "badges-filter"}} options={
 				[
 					{ text: locales.badges_not_filtered || "Show all", value: "all" },
 					{ text: locales.badges_owned_only || "Owned only", value: "owned-only" },
@@ -276,11 +281,11 @@ function Badges({ placeId, friendId }: { placeId: string, friendId: string }) {
 										</li>
 										<li>
 											<div className="text-label">{locales.badges_won_yesterday || "Won Yesterday"}</div>
-											<div className="font-header-2 badge-stats-info">{window.sleezzi.splitNumber(badge.stats.pastDayAwardedCount)}</div>
+											<div className="font-header-2 badge-stats-info">{splitNumber(badge.stats.pastDayAwardedCount)}</div>
 										</li>
 										<li>
 											<div className="text-label">{locales.badges_won_ever || "Won Ever"}</div>
-											<div className="font-header-2 badge-stats-info">{window.sleezzi.splitNumber(badge.stats.awardedCount)}</div>
+											<div className="font-header-2 badge-stats-info">{splitNumber(badge.stats.awardedCount)}</div>
 										</li>
 									</ul>
 								</div>
@@ -289,7 +294,7 @@ function Badges({ placeId, friendId }: { placeId: string, friendId: string }) {
 										badge.owned ?
 										<span className="owned">
 											✓
-											<div className="text-label">{<ParseDate date={badge.owned} />}</div>
+											<div className="text-label">{ParseDate(badge.owned)}</div>
 										</span>
 										:
 										<span>✖</span>

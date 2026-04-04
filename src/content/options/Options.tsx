@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
-import Select from "../components/Select";
-import ParseDate from "../components/ParseDate";
-import Switch from "../components/Switch";
+import Select from "../../components/react/Select";
+import ParseDate from "../../components/parseDate";
+import Switch from "../../components/react/Switch";
 
 import { createRoot } from "react-dom/client";
-import Loading from "../components/Loading";
+import Loading from "../../components/react/Loading";
+import Translates from "../../components/translates";
+import getAvatar from "../../components/api/user/getAvatar";
+import awaitForElement from "../../components/awaitForElement";
+import getIcon from "../../components/getIcon";
 
 const localesToGet = [
 	"options_back",
@@ -23,19 +27,17 @@ const localesToGet = [
 
 function Options() {
 	const [date, setDate] = useState(Date.now());
-	const [locales, setLocales] = useState<{ [name: string]: string }>({});
+	const [locales, setLocales] = useState<{ [name: string]: string | null }>({});
 
 	const [developperAvatar, setDevelopperAvatar] = useState<string | null>(null);
 	const id = "3100004179";
 
 	useEffect(() => {
-		for (const locale of localesToGet) {
-			window.sleezzi.translate(locale).then((value) => setLocales((old) => ({...old, [locale]: value})));
-		}
+		setLocales(Translates(localesToGet));
 	}, []);
 
 	useEffect(() => {
-		window.sleezzi.roblox.user.avatar.headshot(180, "png", [id])
+		getAvatar(180, "png", [id])
 		.then((avatars) => setDevelopperAvatar(avatars[id]));
 	}, []);
 
@@ -114,7 +116,7 @@ function Options() {
 												})()
 											}}
 										/>
-										<p><ParseDate date={date} /></p>
+										<p>{ParseDate(date)}</p>
 									</div>
 									<div id="split_number" className="setting-section">
 										<div className="container-header">
@@ -181,20 +183,20 @@ function Options() {
 					<div className="metadata">
 						<h1>Sleezzi</h1>
 						<div className="links">
-							<a href="https://github.com/Sleezzi/Better-Roblox-Badges" target="_blank" style={{["--color" as "color"]: "white"}}>
-								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg>
+							<a href="https://github.com/Sleezzi/Better-Roblox-Badges" target="_blank">
+								<span style={{"mask": `url(${getIcon("code.png")})`}}></span>
 							</a>
-							<a href="mailto:contact@sleezzi.fr" target="_blank" style={{["--color" as "color"]: "aqua"}}>
-								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"/></svg>
+							<a href="mailto:contact@sleezzi.fr" target="_blank">
+								<span style={{["--color" as "color"]: "aqua", "mask": `url(${getIcon("at-sign.png")})`}}></span>
 							</a>
-							<a href="https://fast.sleezzi.fr/stripe" target="_blank" style={{["--color" as "color"]: "green"}}>
-								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+							<a href="https://fast.sleezzi.fr/stripe" target="_blank">
+								<span style={{["--color" as "color"]: "green", "mask": `url(${getIcon("badge-dollar-sign.png")})`}}></span>
 							</a>
-							<a href="https://chromewebstore.google.com/detail/better-roblox-badges/giaoglbhnfadcjompceiajfkmbghdkeg/reviews" target="_blank" style={{["--color" as "color"]: "yellow"}}>
-								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg>
+							<a href="https://chromewebstore.google.com/detail/better-roblox-badges/giaoglbhnfadcjompceiajfkmbghdkeg/reviews" target="_blank">
+								<span style={{["--color" as "color"]: "yellow", "mask": `url(${getIcon("star.png")})`}}></span>
 							</a>
-							<a href={`https://www.roblox.com/users/${id}/profile`} target="_blank" style={{["--color" as "color"]: "blue"}}>
-								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+							<a href={`https://www.roblox.com/users/${id}/profile`} target="_blank">
+								<span style={{["--color" as "color"]: "blue", "mask": `url(${getIcon("user.png")})`}}></span>
 							</a>
 						</div>
 					</div>
@@ -205,9 +207,8 @@ function Options() {
 }
 
 (async () => {
-	const page = await window.sleezzi.awaitForElement<"div">("#content");
+	const page = await awaitForElement<"div">("#content");
 	if (!page) return;
-	page.innerHTML = "";
-
+	
 	createRoot(page).render(<Options />);
 })();
