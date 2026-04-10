@@ -9,7 +9,6 @@ import extension from "../../components/extension";
 (async () => {
 	const page = await awaitForElement<"div">("#content");
 	if (!page) return;
-	page.innerHTML = "";
 
 	const place = window.location.href.split("/")[4];
 	const user = window.location.href.split("/")[6];

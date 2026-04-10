@@ -68,12 +68,24 @@ const buildManifest = async () => {
 
 	const base = JSON.parse(await readFile(manifest));
 
-	const result = {...base.base};
-	for (const key in base.targets[target]) {
-		result[key] = base.targets[target][key];
+	function mergeDeep(base, override) {
+		for (const [key, value] of Object.entries(override)) {
+			if (Array.isArray(value) && Array.isArray(base[key])) {
+				// Merge par index : les propriétés de override[i] s'ajoutent à base[i]
+				base[key] = base[key].map((item, i) =>
+					value[i] && typeof item === "object"
+						? mergeDeep(structuredClone(item), value[i])
+						: item
+				);
+			} else if (typeof value === "object" && typeof base[key] === "object") {
+				mergeDeep(base[key], value);
+			} else {
+				base[key] = value;
+			}
+		}
+		return base;
 	}
-	
-	await appendFile(`${dist}/manifest.json`, JSON.stringify(result));
+	await appendFile(`${dist}/manifest.json`, JSON.stringify(mergeDeep(base.base, base.targets[target])));
 }
 (async () => {
 	if (!await exist(src)) {

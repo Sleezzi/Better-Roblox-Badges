@@ -277,7 +277,7 @@ function Badges({ placeId, friendId }: { placeId: string, friendId: string }) {
 									<ul className="badge-stats-container">
 										<li>
 											<div className="text-label">{locales.badges_rarity || "Rarity"}</div>
-											<div className="font-header-2 badge-stats-info">{badge.stats.winRatePercentage}%</div>
+											<div className="font-header-2 badge-stats-info">{(badge.stats.winRatePercentage * 100).toFixed(1)}%</div>
 										</li>
 										<li>
 											<div className="text-label">{locales.badges_won_yesterday || "Won Yesterday"}</div>

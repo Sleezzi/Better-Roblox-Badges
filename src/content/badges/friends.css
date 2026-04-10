@@ -1,0 +1,22 @@
+.friend-search, .badge-search {
+	margin: 0 1rem;
+	width: calc(100% - 12px * 2 - 2px * 2 - 1rem * 2);
+}
+.friend {
+	display: flex;
+	margin: 1rem 0;
+}
+.friend[active="false"] {
+	display: none;
+}
+.friend img {
+	background: #d4d4d4;
+}
+.friend .avatar {
+	aspect-ratio: 1/1;
+	border-radius: 100%;
+	min-height: 10rem;
+	min-width: 10rem;
+	height: 10rem;
+	width: 10rem;
+}

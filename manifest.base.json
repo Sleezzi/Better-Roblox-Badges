@@ -4,12 +4,11 @@
 		"name": "__MSG_name__",
 		"description": "__MSG_description__",
 		"default_locale": "en",
-		"version": "1.0.5",
+		"version": "1.0.6",
 		"author": "Sleezzi",
 		"homepage_url": "https://sleezzi.fr",
 		"action": {
-			"default_title": "Open settings",
-			"default_popup": ""
+			"default_title": "Open settings"
 		},
 		"icons": {
 			"128": "/img/Icon_128.png",
@@ -22,6 +21,36 @@
 				"resources": ["img/*.png", "img/*.svg"],
 				"matches": [ "https://*.roblox.com/*" ]
 			}
+		],
+		"content_scripts": [
+			{
+				"matches": [ "https://*.roblox.com/games/*", "https://*.roblox.com/*/games/*" ],
+				"js": [ "/content/games/Games.js" ],
+				"css": [ "/content/games/styles.css" ]
+			},
+			{
+				"matches": [ "https://*.roblox.com/users/*" ],
+				"js": [ "/content/user/profile.js", "/content/user/favorites.js" ],
+				"css": [ "/content/user/styles.css" ]
+			},
+			{
+				"matches": [ "https://*.roblox.com/users/3100004179/*" ],
+				"js": [ "/content/user/Developper.js" ]
+			},
+			{
+				"matches": [ "https://*.roblox.com/better-badges/*" ],
+				"js": [ "/content/badges/Dispatch.js" ],
+				"css": [ "/content/games/styles.css", "/content/badges/friends.css" ]
+			},
+			{
+				"matches": [ "https://*.roblox.com/my/account/*" ],
+				"js": [ "/content/options/Select.js" ]
+			},
+			{
+				"matches": [ "https://*.roblox.com/my/account?page=better-roblox-badges" ],
+				"js": [ "/content/options/Options.js" ],
+				"css": [ "/content/options/styles.css" ]
+			}
 		]
 	},
 	"targets": {
@@ -30,84 +59,37 @@
 			"background": {
 				"service_worker": "background.js"
 			},
-			"content_scripts": [
-				{
-					"matches": [ "https://*.roblox.com/games/*", "https://*.roblox.com/*/games/*" ],
-					"js": [ "/content/games/games.js" ],
-					"css": [ "/content/games/styles.css" ],
+			"content_scripts": {
+				"0": {
 					"runAt": "document_start"
 				},
-				{
-					"matches": [ "https://*.roblox.com/users/*" ],
-					"js": [ "/content/user/profile.js", "/content/user/favorites.js" ],
-					"css": [ "/content/user/styles.css" ],
+				"1": {
 					"runAt": "document_start"
 				},
-				{
-					"matches": [ "https://*.roblox.com/users/3100004179/*" ],
-					"js": [ "/content/user/developper.js" ],
+				"2": {
 					"runAt": "document_start"
 				},
-				{
-					"matches": [ "https://*.roblox.com/better-badges/*" ],
-					"js": [ "/content/badges/dispatch.js" ],
-					"css": [ "/content/games/styles.css", "/content/badges/styles.css" ],
+				"3": {
 					"runAt": "document_start"
 				},
-				{
-					"matches": [ "https://*.roblox.com/my/account/*" ],
-					"js": [ "/content/options/select.js" ],
+				"4": {
 					"runAt": "document_start"
 				},
-				{
-					"matches": [ "https://*.roblox.com/my/account?page=better-roblox-badges" ],
-					"js": [ "/content/options/options.js" ],
-					"css": [ "/content/options/styles.css" ],
+				"5": {
 					"runAt": "document_start"
 				}
-			]
+			}
 		},
 		"firefox": {
 			"background": {
 				"scripts": ["background.js"]
 			},
-			"content_scripts": [
-				{
-					"matches": [ "*://*.roblox.com/*" ],
-					"css": [ "/content/global/styles.css" ]
-				},
-				{
-					"matches": [ "*://*.roblox.com/games/*", "*://*.roblox.com/*/games/*" ],
-					"js": [ "/content/games/Games.js" ],
-					"css": [ "/content/games/styles.css", "/content/badges/styles.css" ]
-				},
-				{
-					"matches": [ "*://*.roblox.com/users/*" ],
-					"js": [ "/content/user/profile.js", "/content/user/favorites.js" ],
-					"css": [ "/content/user/styles.css" ]
-				},
-				{
-					"matches": [ "*://*.roblox.com/users/3100004179/*" ],
-					"js": [ "/content/user/Developper.js" ]
-				},
-				{
-					"matches": [ "*://*.roblox.com/better-badges/*" ],
-					"js": [ "/content/badges/Dispatch.js" ],
-					"css": [ "/content/games/styles.css", "/content/badges/styles.css" ]
-				},
-				{
-					"matches": [ "*://*.roblox.com/my/account*" ],
-					"js": [ "/content/options/Select.js" ]
-				},
-				{
-					"matches": [ "*://*.roblox.com/my/account?page=better-roblox-badges" ],
-					"js": [ "/content/options/Options.js" ],
-					"css": [ "/content/options/styles.css" ]
-				}
-			],
 			"browser_specific_settings": {
 				"gecko": {
-					"id": "better-roblox-badges@sleezzi.fr"
+					"id": "better-roblox-badges@sleezzi.fr",
+					"data_collection_permissions": {
+						"required": ["none"]
+					}
 				}
 			}
 		}

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Select from "../../components/react/Select";
 import ParseDate from "../../components/parseDate";
-import Switch from "../../components/react/Switch";
 
 import { createRoot } from "react-dom/client";
 import Loading from "../../components/react/Loading";
@@ -11,6 +10,7 @@ import awaitForElement from "../../components/awaitForElement";
 import getIcon from "../../components/getIcon";
 
 const localesToGet = [
+	"name",
 	"options_back",
 	"options_basic",
 	"options_date_small_us",
@@ -44,7 +44,7 @@ function Options() {
 	return (
 		<div className="row page-content new-username-pwd-rule" id="user-account">
 			<div id="react-user-account-base">
-				<h1>Better Roblox Badges</h1>
+				<h1>{locales.name || "Better Roblox Badges"}</h1>
 				<div id="settings-container">
 					<div className="settings-left-navigation">
 						<ul className="menu-vertical" role="tablist">
@@ -153,19 +153,6 @@ function Options() {
 												}
 											}}
 										/>
-									</div>
-									<div id="load_all_badges" className="setting-section">
-										<div className="container-header">
-											<h2 className="setting-section-header"></h2>
-										</div>
-										<label htmlFor="">{locales.options_load_all_badges || "Load all badges automatically"}</label>
-										<Switch defaultState={!!localStorage.getItem("loadAllBadges")} toggled={(state) => {
-											if (state) {
-												localStorage.setItem("loadAllBadges", "true");
-											} else {
-												localStorage.removeItem("loadAllBadges");
-											}
-										}} />
 									</div>
 								</div>
 							</div>
