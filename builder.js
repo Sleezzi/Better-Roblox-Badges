@@ -14,6 +14,7 @@ const filters = [
 	dist,
 	new RegExp(`^${dist}.*`),
 	/\.tsx$/,
+	/\.ts$/,
 	`${src}/manifest.json`,
 ];
 
@@ -35,11 +36,6 @@ const navigate = async (path) => {
 	for (const file of await readdir(path, { withFileTypes: true })) {
 		const pathFile = `${path.replace(src, "")}/${file.name}`;
 
-		if (process.argv.find((opt) => opt.startsWith("--deploy")) && target !== "firefox") {
-			if (!process.argv.find((opt) => opt.startsWith("--local"))) {
-				if (!pathFile.endsWith(".css")) continue;
-			}
-		}
 		let filtred = false;
 		for (const filter of filters) {
 			if (typeof filter === "string") {
@@ -62,7 +58,14 @@ const navigate = async (path) => {
 			output.directories += 1;
 			await navigate(`${src.replace(/\/$/, "")}${pathFile}`);
 		} else if (file.isFile()) {
-			if (file.name.endsWith(".ts")) continue;
+			if (
+				process.argv.find((opt) => opt.startsWith("--deploy"))
+				&&
+				!(process.argv.find((opt) => opt.startsWith("--local")) || target === "firefox")
+				&&
+				!pathFile.endsWith(".css")
+			) continue;
+			
 			await appendFile(`${dist.replace(/\/$/, "")}/${pathFile}`, await readFile(`${src.replace(/\/$/, "")}/${pathFile}`));
 			output.files += 1;
 		}
@@ -117,8 +120,9 @@ const buildManifest = async () => {
 	}
 	await mkdir(dist);
 
+	await navigate(src);
+	
 	if (!process.argv.find((opt) => opt.startsWith("--deploy"))) {
-		await navigate(src);
 		buildManifest().then(() => {
 			output.files += 1;
 		});
