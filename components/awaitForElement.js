@@ -1,0 +1,1 @@
+"use strict";(()=>{var a=e=>new Promise((t,n)=>{let r=!1;if(document.querySelector(e)){t(document.querySelector(e));return}let o=()=>{if(document.querySelector(e)){r=!0,t(document.querySelector(e));return}};new MutationObserver(o).observe(document.body,{subtree:!0,childList:!0}),setTimeout(()=>{r||n("Timeout")},1e4)}),u=a;})();
