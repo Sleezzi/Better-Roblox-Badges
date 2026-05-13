@@ -61,9 +61,9 @@ const navigate = async (path) => {
 }
 
 const buildManifest = async () => {
-	const target = process.argv.find((opt) => opt.startsWith("--target"))?.split("=")[1] || "chrome";
-	if (target !== "chrome" && target !== "firefox") {
-		throw new Error("Invalid target: " + target + "\nValid targets are: chrome, firefox");
+	const target = process.argv.find((opt) => opt.startsWith("--target"))?.split("=")[1] || "chromium";
+	if (target !== "chromium" && target !== "firefox") {
+		throw new Error("Invalid target: " + target + "\nValid targets are: chromium, firefox");
 	}
 
 	const base = JSON.parse(await readFile(manifest));
@@ -85,7 +85,7 @@ const buildManifest = async () => {
 		}
 		return base;
 	}
-	await appendFile(`${dist}/manifest.json`, JSON.stringify(mergeDeep(base.base, base.targets[target])));
+	await appendFile(`${dist}/manifest.json`, JSON.stringify(mergeDeep(base.base, base.targets[target])).replace(/\$target/g, target));
 }
 (async () => {
 	if (!await exist(src)) {
@@ -103,7 +103,9 @@ const buildManifest = async () => {
 	}
 	await mkdir(dist);
 
-	await navigate(src);
+	if (!process.argv.find((opt) => opt.startsWith("--deploy"))) {
+		await navigate(src);
+	}
 	buildManifest().then(() => {
 		output.files += 1;
 	});

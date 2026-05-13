@@ -1,0 +1,79 @@
+name: Build to dist branch
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-chromium:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build from chromium
+        run: npm run build -- --target=chromium
+
+      - name: Deploy to dist branch
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          # We position ourselves on the dist branch (created if it does not exist)
+          git checkout -B chromium
+
+          # We delete everything except the compiled folder and git
+          find . -maxdepth 1 ! -name '.' ! -name '.git' ! -name 'dist' ! -name package.json -exec rm -rf {} +
+
+          # We move the contents of dist/ to the root directory
+          mv dist/* .
+          rm -rf dist/
+
+          # We commit and push
+          git add -A
+          git diff --staged --quiet || git commit -m "build: $(date +'%Y-%m-%d %H:%M:%S') from $(git rev-parse --short HEAD)"
+          git push origin dist --force
+  build-firefox:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build from firefox
+        run: npm run build -- --target=firefox
+
+      - name: Deploy to dist branch
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          # We position ourselves on the dist branch (created if it does not exist)
+          git checkout -B firefox
+
+          # We delete everything except the compiled folder and git
+          find . -maxdepth 1 ! -name '.' ! -name '.git' ! -name 'dist' ! -name package.json -exec rm -rf {} +
+
+          # We move the contents of dist/ to the root directory
+          mv dist/* .
+          rm -rf dist/
+
+          # We commit and push
+          git add -A
+          git diff --staged --quiet || git commit -m "build: $(date +'%Y-%m-%d %H:%M:%S') from $(git rev-parse --short HEAD)"
+          git push origin dist --force
