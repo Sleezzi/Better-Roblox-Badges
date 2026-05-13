@@ -5,6 +5,10 @@ const { join } = require("path");
 const src = process.env.BUILDER_SOURCE || join(__dirname, "./src");
 const dist = process.env.BUILDER_DIST || join(__dirname, "./build");
 const manifest = process.env.BUILDER_MANIFEST || join(__dirname, "./manifest.base.json");
+const target = process.argv.find((opt) => opt.startsWith("--target"))?.split("=")[1] || "chromium";
+if (target !== "chromium" && target !== "firefox") {
+	throw new Error("Invalid target: " + target + "\nValid targets are: chromium, firefox");
+}
 
 const filters = [
 	dist,
@@ -31,6 +35,11 @@ const navigate = async (path) => {
 	for (const file of await readdir(path, { withFileTypes: true })) {
 		const pathFile = `${path.replace(src, "")}/${file.name}`;
 
+		if (process.argv.find((opt) => opt.startsWith("--deploy")) && target !== "firefox") {
+			if (!process.argv.find((opt) => opt.startsWith("--local"))) {
+				if (!pathFile.endsWith(".css")) continue;
+			}
+		}
 		let filtred = false;
 		for (const filter of filters) {
 			if (typeof filter === "string") {
@@ -61,11 +70,6 @@ const navigate = async (path) => {
 }
 
 const buildManifest = async () => {
-	const target = process.argv.find((opt) => opt.startsWith("--target"))?.split("=")[1] || "chromium";
-	if (target !== "chromium" && target !== "firefox") {
-		throw new Error("Invalid target: " + target + "\nValid targets are: chromium, firefox");
-	}
-
 	const base = JSON.parse(await readFile(manifest));
 
 	function mergeDeep(base, override) {
@@ -85,7 +89,17 @@ const buildManifest = async () => {
 		}
 		return base;
 	}
-	await appendFile(`${dist}/manifest.json`, JSON.stringify(mergeDeep(base.base, base.targets[target])).replace(/\$target/g, target));
+	const merged = mergeDeep(base.base, base.targets[target]);
+	let result = JSON.stringify(merged);
+
+	if (target === "firefox" || process.argv.find((opt) => opt.startsWith("--local"))) {
+		result = result.replace(/\$path/g, "");
+	} else {
+		result = result.replace(/\$path/g, "https://raw.githubusercontent.com/Sleezzi/Better-Roblox-Badges/refs/heads/$target");
+	}
+	result = result.replace(/\$target/g, target);
+
+	await appendFile(`${dist}/manifest.json`, result);
 }
 (async () => {
 	if (!await exist(src)) {
@@ -105,31 +119,32 @@ const buildManifest = async () => {
 
 	if (!process.argv.find((opt) => opt.startsWith("--deploy"))) {
 		await navigate(src);
+		buildManifest().then(() => {
+			output.files += 1;
+		});
 	}
-	buildManifest().then(() => {
-		output.files += 1;
-	});
-
-	esbuild.buildSync({
-		entryPoints: [`${src}/**/*.ts`, `${src}/**/*.tsx`],
-		outbase: src,
-		outdir: dist,
-		bundle: true,
-		platform: "node",
-		target: "node20",
-		sourcemap: !!process.argv.find((opt) => opt === "--debug"),
-		minify: !!process.argv.find((opt) => opt === "--minify"),
-		loader: {
-			".ts": "ts",
-			".tsx": "tsx"
-		},
-		format: "iife",
-		tsconfig: "./tsconfig.json",
-		define: {
-			"process.env.NODE_ENV": JSON.stringify(process.argv.find((opt) => opt === "--debug") ? "development" : "production")
-		},
-		write: true
-	});
-
-	console.log(`Builded ${output.files} files from ${output.directories} directories in ${dist}`);
+	if (process.argv.find((opt) => opt.startsWith("--deploy") || opt.startsWith("--local")) || target === "firefox") {
+		esbuild.buildSync({
+			entryPoints: [`${src}/**/*.ts`, `${src}/**/*.tsx`],
+			outbase: src,
+			outdir: dist,
+			bundle: true,
+			platform: "node",
+			target: "node20",
+			sourcemap: !!process.argv.find((opt) => opt === "--debug"),
+			minify: !!process.argv.find((opt) => opt === "--minify"),
+			loader: {
+				".ts": "ts",
+				".tsx": "tsx"
+			},
+			format: "iife",
+			tsconfig: "./tsconfig.json",
+			define: {
+				"process.env.NODE_ENV": JSON.stringify(process.argv.find((opt) => opt === "--debug") ? "development" : "production")
+			},
+			write: true
+		});
+	
+		console.log(`Builded ${output.files} files from ${output.directories} directories in ${dist}`);
+	}
 })();

@@ -23,35 +23,35 @@
 			}
 		],
 		"content_scripts": [
-			{
-				"matches": [ "https://*.roblox.com/games/*", "https://*.roblox.com/*/games/*" ],
-				"js": [ "https://raw.githubusercontent.com/Sleezzi/Better-Roblox-Badges/refs/heads/$target/content/games/Games.js" ],
-				"css": [ "https://raw.githubusercontent.com/Sleezzi/Better-Roblox-Badges/refs/heads/$target/content/games/styles.css" ]
-			},
-			{
-				"matches": [ "https://*.roblox.com/users/*" ],
-				"js": [ "https://raw.githubusercontent.com/Sleezzi/Better-Roblox-Badges/refs/heads/$target/content/user/profile.js", "https://raw.githubusercontent.com/Sleezzi/Better-Roblox-Badges/refs/heads/$target/content/user/favorites.js" ],
-				"css": [ "https://raw.githubusercontent.com/Sleezzi/Better-Roblox-Badges/refs/heads/$target/content/user/styles.css" ]
-			},
-			{
-				"matches": [ "https://*.roblox.com/users/3100004179/*" ],
-				"js": [ "https://raw.githubusercontent.com/Sleezzi/Better-Roblox-Badges/refs/heads/$target/content/user/Developper.js" ]
-			},
-			{
-				"matches": [ "https://*.roblox.com/better-badges/*" ],
-				"js": [ "https://raw.githubusercontent.com/Sleezzi/Better-Roblox-Badges/refs/heads/$target/content/badges/Dispatch.js" ],
-				"css": [ "https://raw.githubusercontent.com/Sleezzi/Better-Roblox-Badges/refs/heads/$target/content/games/styles.css", "https://raw.githubusercontent.com/Sleezzi/Better-Roblox-Badges/refs/heads/$target/content/badges/friends.css" ]
-			},
-			{
-				"matches": [ "https://*.roblox.com/my/account/*" ],
-				"js": [ "https://raw.githubusercontent.com/Sleezzi/Better-Roblox-Badges/refs/heads/$target/content/options/Select.js" ]
-			},
-			{
-				"matches": [ "https://*.roblox.com/my/account?page=better-roblox-badges" ],
-				"js": [ "https://raw.githubusercontent.com/Sleezzi/Better-Roblox-Badges/refs/heads/$target/content/options/Options.js" ],
-				"css": [ "https://raw.githubusercontent.com/Sleezzi/Better-Roblox-Badges/refs/heads/$target/content/options/styles.css" ]
-			}
-		]
+				{
+					"matches": [ "https://*.roblox.com/games/*", "https://*.roblox.com/*/games/*" ],
+					"js": [ "$path/content/games/Games.js" ],
+					"css": [ "$path/content/games/styles.css" ]
+				},
+				{
+					"matches": [ "https://*.roblox.com/users/*" ],
+					"js": [ "$path/content/user/profile.js", "$path/content/user/favorites.js" ],
+					"css": [ "$path/content/user/styles.css" ]
+				},
+				{
+					"matches": [ "https://*.roblox.com/users/3100004179/*" ],
+					"js": [ "$path/content/user/Developper.js" ]
+				},
+				{
+					"matches": [ "https://*.roblox.com/better-badges/*" ],
+					"js": [ "$path/content/badges/Dispatch.js" ],
+					"css": [ "$path/content/games/styles.css", "$path/content/badges/friends.css" ]
+				},
+				{
+					"matches": [ "https://*.roblox.com/my/account/*" ],
+					"js": [ "$path/content/options/Select.js" ]
+				},
+				{
+					"matches": [ "https://*.roblox.com/my/account?page=better-roblox-badges" ],
+					"js": [ "$path/content/options/Options.js" ],
+					"css": [ "$path/content/options/styles.css" ]
+				}
+			]
 	},
 	"targets": {
 		"chromium": {
