@@ -62,9 +62,10 @@ const navigate = async (path) => {
 		} else if (file.isFile()) {
 			if (process.argv.find((opt) => opt === "--deploy")) {
 				if (!pathFile.endsWith(".css")) continue;
-			}
-			if (!process.argv.find((opt) => opt === "--local") && target !== "firefox") {
-				if (pathFile.endsWith(".css")) continue;
+			} else {
+				if (!process.argv.find((opt) => opt === "--local") && target !== "firefox") {
+					if (pathFile.endsWith(".css")) continue;
+				}
 			}
 			
 			await appendFile(`${dist.replace(/\/$/, "")}/${pathFile}`, await readFile(`${src.replace(/\/$/, "")}/${pathFile}`));
