@@ -6,6 +6,7 @@ const src = process.env.BUILDER_SOURCE || join(__dirname, "./src");
 const dist = process.env.BUILDER_DIST || join(__dirname, "./build");
 const manifest = process.env.BUILDER_MANIFEST || join(__dirname, "./manifest.base.json");
 const target = process.argv.find((opt) => opt.startsWith("--target"))?.split("=")[1] || "chromium";
+
 if (target !== "chromium" && target !== "firefox") {
 	throw new Error("Invalid target: " + target + "\nValid targets are: chromium, firefox");
 }
@@ -17,6 +18,7 @@ const filters = [
 	/\.ts$/,
 	`${src}/manifest.json`,
 ];
+
 
 const output = {
 	files: 0,
@@ -58,13 +60,12 @@ const navigate = async (path) => {
 			output.directories += 1;
 			await navigate(`${src.replace(/\/$/, "")}${pathFile}`);
 		} else if (file.isFile()) {
-			if (
-				process.argv.find((opt) => opt.startsWith("--deploy"))
-				&&
-				!(process.argv.find((opt) => opt.startsWith("--local")) || target === "firefox")
-				&&
-				!pathFile.endsWith(".css")
-			) continue;
+			if (process.argv.find((opt) => opt === "--deploy")) {
+				if (!pathFile.endsWith(".css")) continue;
+			}
+			if (!process.argv.find((opt) => opt === "--local") && target !== "firefox") {
+				if (pathFile.endsWith(".css")) continue;
+			}
 			
 			await appendFile(`${dist.replace(/\/$/, "")}/${pathFile}`, await readFile(`${src.replace(/\/$/, "")}/${pathFile}`));
 			output.files += 1;
@@ -122,12 +123,12 @@ const buildManifest = async () => {
 
 	await navigate(src);
 	
-	if (!process.argv.find((opt) => opt.startsWith("--deploy"))) {
+	if (!process.argv.find((opt) => opt === "--deploy")) {
 		buildManifest().then(() => {
 			output.files += 1;
 		});
 	}
-	if (process.argv.find((opt) => opt.startsWith("--deploy") || opt.startsWith("--local")) || target === "firefox") {
+	if (process.argv.find((opt) => opt === "--deploy" || opt === "--local") || target === "firefox") {
 		esbuild.buildSync({
 			entryPoints: [`${src}/**/*.ts`, `${src}/**/*.tsx`],
 			outbase: src,
