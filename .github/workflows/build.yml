@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build from firefox
+      - name: Build from chromium
         run: npm run build -- --target=chromium --deploy
 
       - name: Deploy to dist branch
@@ -30,7 +30,7 @@ jobs:
           git config user.email "github-actions@github.com"
 
           # We position ourselves on the dist branch (created if it does not exist)
-          git checkout -B firefox
+          git checkout -B chromium
 
           # We delete everything except the compiled folder and git
           find . -maxdepth 1 ! -name '.' ! -name '.git' ! -name 'build' ! -name package.json -exec rm -rf {} +
@@ -42,4 +42,4 @@ jobs:
           # We commit and push
           git add -A
           git diff --staged --quiet || git commit -m "build: $(date +'%Y-%m-%d %H:%M:%S') from $(git rev-parse --short HEAD)"
-          git push origin firefox --force
+          git push origin chromium --force
