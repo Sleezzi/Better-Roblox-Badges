@@ -22,7 +22,7 @@ jobs:
         run: npm ci
 
       - name: Build from chromium
-        run: npm run build -- --target=chromium
+        run: npm run build -- --target=chromium --deploy
 
       - name: Deploy to dist branch
         run: |
@@ -60,7 +60,7 @@ jobs:
         run: npm ci
 
       - name: Build from firefox
-        run: npm run build -- --target=firefox
+        run: npm run build -- --target=firefox --deploy
 
       - name: Deploy to dist branch
         run: |
