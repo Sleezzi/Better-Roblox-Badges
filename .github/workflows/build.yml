@@ -31,16 +31,16 @@ jobs:
           git checkout -B chromium
 
           # We delete everything except the compiled folder and git
-          find . -maxdepth 1 ! -name '.' ! -name '.git' ! -name 'dist' ! -name package.json -exec rm -rf {} +
+          find . -maxdepth 1 ! -name '.' ! -name '.git' ! -name 'build' ! -name package.json -exec rm -rf {} +
 
-          # We move the contents of dist/ to the root directory
-          mv dist/* .
-          rm -rf dist/
+          # We move the contents of build/ to the root directory
+          mv build/* .
+          rm -rf build/
 
           # We commit and push
           git add -A
           git diff --staged --quiet || git commit -m "build: $(date +'%Y-%m-%d %H:%M:%S') from $(git rev-parse --short HEAD)"
-          git push origin dist --force
+          git push origin chromium --force
   build-firefox:
     runs-on: ubuntu-latest
     steps:
@@ -67,13 +67,13 @@ jobs:
           git checkout -B firefox
 
           # We delete everything except the compiled folder and git
-          find . -maxdepth 1 ! -name '.' ! -name '.git' ! -name 'dist' ! -name package.json -exec rm -rf {} +
+          find . -maxdepth 1 ! -name '.' ! -name '.git' ! -name 'build' ! -name package.json -exec rm -rf {} +
 
-          # We move the contents of dist/ to the root directory
-          mv dist/* .
-          rm -rf dist/
+          # We move the contents of build/ to the root directory
+          mv build/* .
+          rm -rf build/
 
           # We commit and push
           git add -A
           git diff --staged --quiet || git commit -m "build: $(date +'%Y-%m-%d %H:%M:%S') from $(git rev-parse --short HEAD)"
-          git push origin dist --force
+          git push origin firefox --force
