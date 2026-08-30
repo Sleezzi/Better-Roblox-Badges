@@ -6,7 +6,7 @@
 		"message": "Improve how Roblox shows you game badges"
 	},
 	"day": {
-		"message": "Sunday/Monday/Thuesday/Wednesday/Thursday/Friday/Saturday"
+		"message": "Sunday/Monday/Tuesday/Wednesday/Thursday/Friday/Saturday"
 	},
 	"month": {
 		"message": "January/February/March/April/May/June/July/August/September/October/November/December"
@@ -67,6 +67,9 @@
 	},
 	"options_load_all_badges": {
 		"message": "Load all badges automatically"
+	},
+	"options_settings_saved": {
+		"message": "The settings have been updated."
 	},
 	"options_split_number": {
 		"message": "Split numbers by"
