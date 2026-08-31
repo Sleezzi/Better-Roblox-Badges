@@ -176,7 +176,7 @@ function Options() {
 							<a href="mailto:contact@sleezzi.fr" target="_blank">
 								<span style={{["--color" as "color"]: "aqua", "mask": `url(${getIcon("at-sign.png")})`}}></span>
 							</a>
-							<a href="https://fast.sleezzi.fr/stripe" target="_blank">
+							<a href="https://sleezzi.fr/stripe" target="_blank">
 								<span style={{["--color" as "color"]: "green", "mask": `url(${getIcon("badge-dollar-sign.png")})`}}></span>
 							</a>
 							<a href="https://chromewebstore.google.com/detail/better-roblox-badges/giaoglbhnfadcjompceiajfkmbghdkeg/reviews" target="_blank">
