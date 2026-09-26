@@ -1,18 +1,20 @@
 import { useEffect, useState } from "react";
 import Select from "../../components/react/Select";
-import ParseDate from "../../components/parseDate";
+import { DateComposent } from "../../components/parseDate";
 import Loading from "../../components/react/Loading";
 import Translates from "../../components/translates";
-import getDetails from "../../components/api/user/getDetails";
 import getAvatar from "../../components/api/user/getAvatar";
-import splitNumber from "../../components/splitNumber";
+import { NumberComposent } from "../../components/splitNumber";
 import Icon from "../../components/react/Icon";
+import { User } from "../../components/user";
+import Notify from "../global/Notifications";
+import Console from "../../components/console";
 
 type Badge = {
 	thumbnail: string | null,
 	name: string,
 	description: string,
-	owned: string | false,
+	owned: any,//string | false,
 	stats: {
 		pastDayAwardedCount: number,
 		awardedCount: number,
@@ -21,16 +23,21 @@ type Badge = {
 	visible: boolean
 }
 
-const localesToGet = ["badges_total", "badges_rarity", "badges_won_yesterday", "badges_won_ever", "badges_search", "badges_not_filtered", "badges_owned_only", "badges_not_owned_only"];
+const localesToGet = [
+	"badges_total",
+	"badges_rarity",
+	"badges_won_yesterday",
+	"badges_won_ever",
+	"badges_search",
+	"badges_not_filtered",
+	"badges_owned_only",
+	"badges_not_owned_only",
+	"error",
+	"error_message",
+];
 
-function Badges({ placeId, friendId }: { placeId: string, friendId: string }) {
-	const [profile, setProfile] = useState<{
-		displayName?: string;
-		name?: string;
-		avatar?: string;
-		hasVerifiedBadge?: boolean;
-		isBanned?: boolean;
-	}>({});
+function Badges({ placeId, user }: { placeId: string, user: User }) {
+	const [avatar, setAvatar] = useState<string | null>(null);
 	const [universeId, setUniverseId] = useState<number | null>(null);
 	const [index, setIndex] = useState<string>("");
 	const [badges, setBadges] = useState<{ [id: number]: Badge } | null>(null);
@@ -42,23 +49,29 @@ function Badges({ placeId, friendId }: { placeId: string, friendId: string }) {
 	}, []);
 
 	useEffect(() => {
-		getDetails(friendId)
-		.then((user) => setProfile((old: any) => ({ ...old,
-			name: user.name,
-			displayName: user.displayName,
-			hasVerifiedBadge: user.hasVerifiedBadge,
-			isBanned: user.isBanned
-		})));
-
-		getAvatar(150, "png", [friendId])
-		.then((avatars) => setProfile((old: any) => ({ ...old, avatar: avatars[friendId as any] })));
-	}, [friendId]);
+		getAvatar(150, "png", [user.id])
+		.then((avatars) => setAvatar(avatars[user.id as any]))
+		.catch(async (err) => {
+			console.error(err);
+			await Console(`Failed to retreive the ${user.id}'s avatar - ${err}`);
+			Notify(locales.error || "Error", locales.error_message || "An error occurred; check the console for more details.");
+		});
+	}, [user]);
 
 	useEffect(() => {
+	}, [location.href]);
+
+	useEffect(() => {
+		if (!placeId) return;
 		fetch(`https://apis.roblox.com/universes/v1/places/${placeId}/universe`)
 		.then((response) => response.json())
 		.then((response: { universeId: number }) => {
 			setUniverseId(response.universeId);
+		})
+		.catch(async (err) => {
+			console.error(err);
+			await Console(`https://apis.roblox.com/universes/v1/places/${placeId}/universe - ${err}`);
+			Notify(locales.error || "Error", locales.error_message || "An error occurred; check the console for more details.");
 		});
 	}, [placeId]);
 
@@ -131,8 +144,14 @@ function Badges({ placeId, friendId }: { placeId: string, friendId: string }) {
 						}
 					}));
 				}
+			})
+			.catch(async (err) => {
+				console.error(err);
+				await Console(`https://thumbnails.roblox.com/v1/badges/icons?badgeIds=${response.data.map((badge) => badge.id).join(",")}&size=150x150&format=png - ${err}`);
+				Notify(locales.error || "Error", locales.error_message || "An error occurred; check the console for more details.");
 			});
-			fetch(`https://badges.roblox.com/v1/users/${friendId}/badges/awarded-dates?badgeIds=${response.data.map((badge) => badge.id).join(",")}`, {
+
+			fetch(`https://badges.roblox.com/v1/users/${user.id}/badges/awarded-dates?badgeIds=${response.data.map((badge) => badge.id).join(",")}`, {
 				method: "GET",
 				credentials: "include"
 			})
@@ -152,31 +171,42 @@ function Badges({ placeId, friendId }: { placeId: string, friendId: string }) {
 						}
 					}));
 				}
+			})
+			.catch(async (err) => {
+				console.error(err);
+				await Console(`https://badges.roblox.com/v1/users/${user.id}/badges/awarded-dates?badgeIds=${response.data.map((badge) => badge.id).join(",")} - ${err}`);
+				Notify(locales.error || "Error", locales.error_message || "An error occurred; check the console for more details.");
 			});
+
 			if (response.nextPageCursor) {
 				setIndex(response.nextPageCursor);
 			}
+		})
+		.catch(async (err) => {
+			console.error(err);
+			await Console(`https://badges.roblox.com/v1/universes/${universeId}/badges?limit=100&cursor=${index}&sortOrder=Asc - ${err}`);
+			Notify(locales.error || "Error", locales.error_message || "An error occurred; check the console for more details.");
 		});
 	}, [universeId, index]);
 
 	return (
 		<>
-			<a href={`https://www.roblox.com/users/${friendId}/profile`} className="profile-header-main">
+			<a href={`https://www.roblox.com/users/${user.id}/profile`} className="profile-header-main">
 				{
-					profile.avatar ?
-					<img className="avatar" src={profile.avatar} alt={`${profile.displayName}'s avatar`} title={`${profile.displayName}'s avatar`} />
+					avatar ?
+					<img className="avatar" src={avatar} alt={`${user.displayName}'s avatar`} title={`${user.displayName}'s avatar`} />
 					:
 					<Loading className="avatar" />
 				}
 				<div className="profile-header-details">
 					<span className="user-display-name">
 						{
-							profile.displayName || <Loading style={{height: "1.5rem", width: "10rem"}} />
+							user.displayName || <Loading style={{height: "1.5rem", width: "10rem"}} />
 						}
 					</span>
 					<span className="user-name web-blox-css-tss-zzwi3a-Typography-body1-Typography-colorSecondary-Typography-root profile-header-username">
 						{
-							profile.name ? `@${profile.name}` : <Loading style={{height: ".75rem", width: "5rem"}} />
+							user.username ? `@${user.username}` : <Loading style={{height: ".75rem", width: "5rem"}} />
 						}
 					</span>
 					<p className="user-description">
@@ -187,7 +217,7 @@ function Badges({ placeId, friendId }: { placeId: string, friendId: string }) {
 					</p>
 				</div>
 				<a href={`/better-badges/${placeId}/`} style={{height: "1.5rem", width: "1.5rem"}}>
-					<Icon color="white" icon="arrow-right-left.png" />
+					<Icon color="var(--color-content-emphasis)" icon="arrow-right-left.png" />
 				</a>
 			</a>
 			<input
@@ -250,13 +280,13 @@ function Badges({ placeId, friendId }: { placeId: string, friendId: string }) {
 				setBadges(result);
 			}, defaultValue: "all"}} />
 			<div className="stack badge-container game-badges-list">
-				<ul className="stack-list">
+				<ul className="stack-list better-badges">
 					{
 						badges ?
 						Object.entries(badges)
 						.filter(([_id, badge]) => badge.visible)
 						.map(([id, badge]) => (
-							<li key={id} className="stack-row badge-row" {...{"badge-id": id, owned: !!badge.owned}}>
+							<li key={id} className="stack-row badge-row" {...{"badge-id": id}}>
 								<div className="badge-image">
 									<a href={`/badges/${id}/${badge.name}`}>
 										<span className="thumbnail-2d-container badge-image-container">
@@ -281,11 +311,15 @@ function Badges({ placeId, friendId }: { placeId: string, friendId: string }) {
 										</li>
 										<li>
 											<div className="text-label">{locales.badges_won_yesterday || "Won Yesterday"}</div>
-											<div className="font-header-2 badge-stats-info">{splitNumber(badge.stats.pastDayAwardedCount)}</div>
+											<div className="font-header-2 badge-stats-info">
+												<NumberComposent number={badge.stats.pastDayAwardedCount} />
+											</div>
 										</li>
 										<li>
 											<div className="text-label">{locales.badges_won_ever || "Won Ever"}</div>
-											<div className="font-header-2 badge-stats-info">{splitNumber(badge.stats.awardedCount)}</div>
+											<div className="font-header-2 badge-stats-info">
+												<NumberComposent number={badge.stats.awardedCount} />
+											</div>
 										</li>
 									</ul>
 								</div>
@@ -294,7 +328,9 @@ function Badges({ placeId, friendId }: { placeId: string, friendId: string }) {
 										badge.owned ?
 										<span className="owned">
 											✓
-											<div className="text-label">{ParseDate(badge.owned)}</div>
+											<div className="text-label">
+												<DateComposent date={badge.owned} />
+											</div>
 										</span>
 										:
 										<span>✖</span>

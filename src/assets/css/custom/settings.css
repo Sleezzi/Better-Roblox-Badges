@@ -1,3 +1,16 @@
+#settings-container {
+	display: flex;
+}
+
+#settings-container .menu-vertical {
+	height: min-content;
+}
+
+#settings-container .tab-content.rbx-tab-content {
+	width: calc(100% - 160px);
+	padding: 0 1rem;
+}
+
 #developper-section {
 	display: flex;
 	width: 100%;
@@ -8,10 +21,8 @@
 }
 #developper-section .avatar {
 	border-radius: 100%;
-	min-height: 10rem;
-	min-width: 10rem;
-	height: 10rem;
-	width: 10rem;
+	height: 10rem !important;
+	width: 10rem !important;
 	aspect-ratio: 1/1;
 }
 #developper-section .metadata {
@@ -35,7 +46,6 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	--color: currentColor;
 }
 #developper-section .metadata .links a span {
 	height: 100%;
@@ -43,10 +53,33 @@
 	mask-position: center !important;
 	mask-size: cover !important;
 	mask-repeat: no-repeat !important;
-	background: white;
+	background: var(--color-content-emphasis);
 	transition: background .5s ease, transform 1s ease;
 }
 #developper-section .metadata .links a:hover span {
-	background: var(--color);
+	background: currentColor;
 	transform: translate(0, -.5rem) rotateY(360deg);
+}
+
+#logs-section {
+	display: flex;
+	flex-direction: column;
+	gap: .5rem;
+	background: var(--color-shift-200);
+	color: var(--color-content-default);
+	padding: 1rem .5rem;
+	margin: 2rem 0;
+	position: relative;
+}
+#logs-section button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 1rem;
+	height: 1.5rem;
+	width: 1.5rem;
+	aspect-ratio: 1/1;
+	background: none;
+	border: none;
+	color: var(--color-content-default);
 }

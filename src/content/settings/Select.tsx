@@ -15,7 +15,7 @@ function Button() {
 
 	return (
 		<>
-			<a href="/my/account?page=better-roblox-badges" className={`menu-option-content${window.location.href.endsWith("/my/account?page=better-roblox-badges") ? " active" : ""}`}>
+			<a href="/better-badges" className="menu-option-content">
 				<span className="font-caption-header">
 					{locales.name || "Better Roblox Badges"}
 				</span>

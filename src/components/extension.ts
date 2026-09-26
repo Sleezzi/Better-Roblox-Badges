@@ -8,7 +8,12 @@ const extension = {
 		32: browser.runtime.getURL("/img/Icon_32.png"),
 		16: browser.runtime.getURL("/img/Icon_16.png")
 	},
-	name: browser.i18n.getMessage("name")
+	name: browser.i18n.getMessage("name"),
+	version: browser.runtime.getManifest().version,
+	author: {
+		name: browser.runtime.getManifest().author,
+		roblox: "3100004179"
+	}
 }
 
 export default extension;

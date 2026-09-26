@@ -65,6 +65,12 @@
 	"options_date_full_default": {
 		"message": "Дефект, полный"
 	},
+	"options_settings_saved": {
+		"message": "Сохранено"
+	},
+	"options_settings_saved_message": {
+		"message": "Настройки обновлены."
+	},
 	"options_split_number": {
 		"message": "Разделите числа на"
 	},
@@ -79,5 +85,11 @@
 	},
 	"options_load_all_badges": {
 		"message": "Загрузить все значки автоматически"
+	},
+	"error": {
+		"message": "Ошибка"
+	},
+	"error_message": {
+		"message": "Произошла ошибка, пожалуйста, проверьте консоль для получения подробной информации"
 	}
 }

@@ -1,3 +1,7 @@
+.badge-container.game-badges-list .stack-list:not(.better-badges), .badge-container.game-badges-list > li > button {
+	display: none;
+}
+
 .profile-header-main {
 	display: flex;
 	padding: 1rem 2rem;
@@ -28,7 +32,7 @@
 	font-weight: 500;
 }
 .user-name, .badge-description {
-	color: #d5d7dd;
+	color: var(--color-content-default);
 }
 .badge-search {
 	margin: 1rem 0;
@@ -76,10 +80,6 @@
 	margin: .5rem;
 	padding: .25rem;
 	border-radius: 100%;
-
-
-
-
 	display: flex;
 	justify-content: center;
 	align-items: center;

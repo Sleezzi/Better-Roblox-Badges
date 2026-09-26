@@ -69,6 +69,9 @@
 		"message": "Load all badges automatically"
 	},
 	"options_settings_saved": {
+		"message": "Saved"
+	},
+	"options_settings_saved_message": {
 		"message": "The settings have been updated."
 	},
 	"options_split_number": {
@@ -82,5 +85,11 @@
 	},
 	"options_split_number_space": {
 		"message": "Space"
+	},
+	"error": {
+		"message": "Error"
+	},
+	"error_message": {
+		"message": "An error occurred; check the console for more details"
 	}
 }

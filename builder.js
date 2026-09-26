@@ -5,7 +5,7 @@ const { join } = require("path");
 const src = process.env.BUILDER_SOURCE || join(__dirname, "./src");
 const dist = process.env.BUILDER_DIST || join(__dirname, "./build");
 const manifest = process.env.BUILDER_MANIFEST || join(__dirname, "./manifest.base.json");
-const target = process.argv.find((opt) => opt.startsWith("--target"))?.split("=")[1] || "chromium";
+const target = process.argv.find((opt) => opt.startsWith("--target"))?.split("=")[1] || "firefox";
 
 if (target !== "chromium" && target !== "firefox") {
 	throw new Error("Invalid target: " + target + "\nValid targets are: chromium, firefox");
@@ -60,14 +60,6 @@ const navigate = async (path) => {
 			output.directories += 1;
 			await navigate(`${src.replace(/\/$/, "")}${pathFile}`);
 		} else if (file.isFile()) {
-			if (process.argv.find((opt) => opt === "--deploy")) {
-				if (!pathFile.endsWith(".css")) continue;
-			} else {
-				if (!process.argv.find((opt) => opt === "--local") && target !== "firefox") {
-					if (pathFile.endsWith(".css")) continue;
-				}
-			}
-			
 			await appendFile(`${dist.replace(/\/$/, "")}/${pathFile}`, await readFile(`${src.replace(/\/$/, "")}/${pathFile}`));
 			output.files += 1;
 		}
@@ -97,11 +89,6 @@ const buildManifest = async () => {
 	const merged = mergeDeep(base.base, base.targets[target]);
 	let result = JSON.stringify(merged);
 
-	if (target === "firefox" || process.argv.find((opt) => opt.startsWith("--local"))) {
-		result = result.replace(/\$path/g, "");
-	} else {
-		result = result.replace(/\$path/g, "https://raw.githubusercontent.com/Sleezzi/Better-Roblox-Badges/refs/heads/$target");
-	}
 	result = result.replace(/\$target/g, target);
 
 	await appendFile(`${dist}/manifest.json`, result);
@@ -124,33 +111,29 @@ const buildManifest = async () => {
 
 	await navigate(src);
 	
-	if (!process.argv.find((opt) => opt === "--deploy")) {
-		buildManifest().then(() => {
-			output.files += 1;
-		});
-	}
-	if (process.argv.find((opt) => opt === "--deploy" || opt === "--local") || target === "firefox") {
-		esbuild.buildSync({
-			entryPoints: [`${src}/**/*.ts`, `${src}/**/*.tsx`],
-			outbase: src,
-			outdir: dist,
-			bundle: true,
-			platform: "node",
-			target: "node20",
-			sourcemap: !!process.argv.find((opt) => opt === "--debug"),
-			minify: !!process.argv.find((opt) => opt === "--minify"),
-			loader: {
-				".ts": "ts",
-				".tsx": "tsx"
-			},
-			format: "iife",
-			tsconfig: "./tsconfig.json",
-			define: {
-				"process.env.NODE_ENV": JSON.stringify(process.argv.find((opt) => opt === "--debug") ? "development" : "production")
-			},
-			write: true
-		});
+	buildManifest().then(() => {
+		output.files += 1;
+	});
 	
-		console.log(`Builded ${output.files} files from ${output.directories} directories in ${dist}`);
-	}
+	esbuild.buildSync({
+		entryPoints: [`${src}/**/*.ts`, `${src}/**/*.tsx`],
+		outbase: src,
+		outdir: dist,
+		bundle: true,
+		platform: "node",
+		target: "node20",
+		sourcemap: !!process.argv.find((opt) => opt === "--debug"),
+		minify: !!process.argv.find((opt) => opt === "--minify"),
+		loader: {
+			".ts": "ts",
+			".tsx": "tsx"
+		},
+		format: "iife",
+		tsconfig: "./tsconfig.json",
+		define: {
+			"process.env.NODE_ENV": JSON.stringify(process.argv.find((opt) => opt === "--debug") ? "development" : "production")
+		},
+		write: true
+	});
+	console.log(`Builded ${output.files} files from ${output.directories} directories in ${dist}`);
 })();

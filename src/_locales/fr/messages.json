@@ -65,6 +65,12 @@
 	"options_date_full_default": {
 		"message": "Défaut, complet"
 	},
+	"options_settings_saved": {
+		"message": "Sauvegardé"
+	},
+	"options_settings_saved_message": {
+		"message": "Les paramêtres ont été mise à jour."
+	},
 	"options_split_number": {
 		"message": "Séparer les nombres par"
 	},
@@ -79,5 +85,11 @@
 	},
 	"options_load_all_badges": {
 		"message": "Charger tous les badges automatiquement"
+	},
+	"error": {
+		"message": "Erreur"
+	},
+	"error_message": {
+		"message": "Une erreur s'est produite, consulter la console pour avoir plus de détails"
 	}
 }

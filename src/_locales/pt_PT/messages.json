@@ -65,6 +65,12 @@
 	"options_date_full_default": {
 		"message": "Defeito, completo"
 	},
+	"options_settings_saved": {
+		"message": "Salvo"
+	},
+	"options_settings_saved_message": {
+		"message": "As definições foram atualizadas."
+	},
 	"options_split_number": {
 		"message": "Separe os números por"
 	},
@@ -79,5 +85,11 @@
 	},
 	"options_load_all_badges": {
 		"message": "Carregar todos os emblemas automaticamente"
+	},
+	"error": {
+		"message": "Erro"
+	},
+	"error_message": {
+		"message": "Ocorreu um erro. Verifique a consola para obter detalhes."
 	}
 }
