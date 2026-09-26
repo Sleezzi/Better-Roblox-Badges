@@ -135,5 +135,5 @@ const buildManifest = async () => {
 		},
 		write: true
 	});
-	console.log(`Builded ${output.files} files from ${output.directories} directories in ${dist}`);
+	console.log(`Builded ${output.files} files from ${output.directories} directories in ${dist} for ${target}`);
 })();
