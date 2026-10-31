@@ -89,7 +89,15 @@ function Friends() {
 
 	useEffect(() => {
 		setPlaceId(location.href.split("/")[4]);
-		user().then((u) => setUserId(u ? u.id : null));
+		user()
+		.then((u) => {
+			if (!u) {
+				Notify("Error", "Unable to retrieve the user ID.");
+				Console("Unable to retrieve the user ID.");
+				return;
+			}
+			setUserId(u.id);
+		});
 	}, [location.href]);
 
 	const setFriend = (id: string, details: any) => {

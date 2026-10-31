@@ -8,49 +8,39 @@ import pages from "./pages";
 
 function Dispatch() {
 	useEffect(() => {
-		const files: {
-			inject: {
-				js: string[],
-				css: string[]
-			},
-			remove: {
-				css: string[]
-			}
-		} = {
-			inject: {
-				js: [],
-				css: []
-			},
-			remove: {
-				css: []
-			}
+		const inject = {
+			js: new Set<string>(),
+			css: new Set<string>()
 		}
+		const remove = new Set<string>();
+
 		for (const page of pages) {
 			const isMatching = page.url.find((url) => RegExp(`^https:\/\/(www\.)?roblox\.com\/${url.source}`).test(location.href));
-			if (!isMatching) {
-				files.remove.css = page.css.concat(files.remove.css);
-				continue;
-			}
-			files.inject.css = page.css.concat(files.inject.css);
-			files.inject.js = page.js.concat(files.inject.js);
+			if (!isMatching) continue;
+			page.css.forEach((file) => inject.css.add(file));
+			page.js.forEach((file) => inject.js.add(file));
 		}
-
+		for (const page of pages) {
+			for (const file of page.css) {
+				if (!inject.css.has(file)) remove.add(file);
+			}
+		}
 		browser.runtime.sendMessage({
 			request: "inject.remove",
-			args: files.remove.css
+			args: [...remove]
 		}).then(() => {
 			browser.runtime.sendMessage({
 				request: "inject",
 				args: {
-					js: files.inject.js,
-					css: files.inject.css
+					js: [...inject.js],
+					css: [...inject.css]
 				}
 			});
 		});
 		return () => {
 			browser.runtime.sendMessage({
 				request: "inject.remove",
-				args: pages.map((page) => page.css).flat()
+				args: pages.flatMap((page) => page.css)
 			});
 		}
 	}, [location.href]);

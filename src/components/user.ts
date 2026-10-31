@@ -9,7 +9,7 @@ export interface User {
 const user = async () => {
 	const element = await awaitForElement<"meta">("meta[name=\"user-data\"]");
 	if (!element) return null;
-
+	
 	return {
 		username: element.getAttribute("data-name")!,
 		displayName: element.getAttribute("data-displayname")!,

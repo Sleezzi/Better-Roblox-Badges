@@ -191,14 +191,14 @@ function Badges({ placeId, user }: { placeId: string, user: User }) {
 
 	return (
 		<>
-			<a href={`https://www.roblox.com/users/${user.id}/profile`} className="profile-header-main">
+			<div className="profile-header-main">
 				{
 					avatar ?
-					<img className="avatar" src={avatar} alt={`${user.displayName}'s avatar`} title={`${user.displayName}'s avatar`} />
+					<img style={{cursor: "pointer"}} onClick={() => window.open(`https://www.roblox.com/users/${user.id}/profile`)} className="avatar" src={avatar} alt={`${user.displayName}'s avatar`} title={`${user.displayName}'s avatar`} />
 					:
 					<Loading className="avatar" />
 				}
-				<div className="profile-header-details">
+				<a href={`https://www.roblox.com/users/${user.id}/profile`} className="profile-header-details">
 					<span className="user-display-name">
 						{
 							user.displayName || <Loading style={{height: "1.5rem", width: "10rem"}} />
@@ -215,11 +215,11 @@ function Badges({ placeId, user }: { placeId: string, user: User }) {
 						<span> - </span>
 						<b>{badges ? (Object.entries(badges).filter(([id, badge]) => badge.owned).length / Object.keys(badges).length * 100).toFixed(2) : 0}%</b>
 					</p>
-				</div>
+				</a>
 				<a href={`/better-badges/${placeId}/`} style={{height: "1.5rem", width: "1.5rem"}}>
 					<Icon color="var(--color-content-emphasis)" icon="arrow-right-left.png" />
 				</a>
-			</a>
+			</div>
 			<input
 				{...{"data-testid": "navigation-search-input-field"}}
 				type="search"
