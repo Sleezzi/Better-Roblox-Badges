@@ -5,6 +5,7 @@ import awaitForElement from "../components/awaitForElement";
 import { useEffect } from "react";
 import browser from "webextension-polyfill";
 import pages from "./pages";
+import { LOCALE } from "../components/getUrlsParts";
 
 function Dispatch() {
 	useEffect(() => {
@@ -15,7 +16,7 @@ function Dispatch() {
 		const remove = new Set<string>();
 
 		for (const page of pages) {
-			const isMatching = page.url.find((url) => RegExp(`^https:\/\/(www\.)?roblox\.com\/${url.source}`).test(location.href));
+			const isMatching = page.url.find((url) => RegExp(`^https:\/\/(www\.)?roblox\.com(\/${LOCALE.source})?\/${url.source}`).test(location.href));
 			if (!isMatching) continue;
 			page.css.forEach((file) => inject.css.add(file));
 			page.js.forEach((file) => inject.js.add(file));
@@ -43,7 +44,7 @@ function Dispatch() {
 				args: pages.flatMap((page) => page.css)
 			});
 		}
-	}, [location.href]);
+	}, []);
 
 	return (<></>);
 }

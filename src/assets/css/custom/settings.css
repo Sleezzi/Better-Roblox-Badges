@@ -71,15 +71,24 @@
 	margin: 2rem 0;
 	position: relative;
 }
-#logs-section button {
+#logs-section .buttons {
 	position: absolute;
 	top: 0;
 	right: 0;
 	margin: 1rem;
+	display: flex;
+	gap: .5rem;
+}
+#logs-section .buttons button {
 	height: 1.5rem;
 	width: 1.5rem;
 	aspect-ratio: 1/1;
 	background: none;
 	border: none;
 	color: var(--color-content-default);
+}
+#debug-section div {
+	display: flex;
+	justify-content: space-around;
+	width: 100%;
 }

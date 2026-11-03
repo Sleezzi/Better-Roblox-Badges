@@ -28,6 +28,11 @@ const pages: { url: RegExp[], js: string[], css: string[] }[] = [
 		js: [ "/content/custom/Badges.js" ],
 	},
 	{ // Modifies the user's Roblox settings page.
+		url: [ /users\/inventory/, /users\/[0-9]*\/inventory/ ],
+		css: [ "/assets/css/games/styles.css" ],
+		js: [ "/content/custom/Inventory.js" ],
+	},
+	{ // Modifies the user's Roblox settings page.
 		url: [ /my\/account/ ],
 		css: [],
 		js: [ "/content/settings/Select.js" ],

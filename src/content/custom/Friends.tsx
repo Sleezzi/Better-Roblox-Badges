@@ -7,6 +7,7 @@ import awaitForElement from "../../components/awaitForElement";
 import { createRoot } from "react-dom/client";
 import Notify from "../global/Notifications";
 import Console from "../../components/console";
+import getUrlParts from "../../components/getUrlsParts";
 
 type Friend = {
 	name: string,
@@ -15,12 +16,19 @@ type Friend = {
 }
 const localesToGet = ["badges_search", "error","error_message"];
 
-const fetchAllFriends = async (id: string) => {
+const fetchAllFriends = async (id: string, locales: Record<string, string>) => {
 	const total: number = await fetch("https://friends.roblox.com/v1/my/friends/count", {
 		method: "GET",
 		credentials: "include",
 	}).then((response) => response.json())
-	.then((response) => response.count);
+	.then((response) => response.count)
+	.catch(async (err) => {
+		console.error(err);
+		await Console(`Friends.tsx | https://friends.roblox.com/v1/my/friends/count - ${err}`);
+		Notify(locales.error || "Error", locales.error_message || "An error occurred; check the console for more details.");
+	});
+
+	if (total === 0) return [];
 
 	let cursor: string | null = "";
 	const friends = new Map<string, {
@@ -33,7 +41,12 @@ const fetchAllFriends = async (id: string) => {
 			method: "GET",
 			cache: "force-cache",
 			credentials: "include"
-		}).then((response) => response.json());
+		}).then((response) => response.json())
+		.catch(async (err) => {
+			console.error(err);
+			await Console(`Friends.tsx | https://friends.roblox.com/v1/users/${id}/friends/find?userSort=1&cursor=${cursor}&limit=50 - ${err}`);
+			Notify(locales.error || "Error", locales.error_message || "An error occurred; check the console for more details.");
+		});
 		if (data.length === 0) break;
 
 		const profiles: {
@@ -55,7 +68,12 @@ const fetchAllFriends = async (id: string) => {
 			}),
 			method: "POST",
 		})
-		.then((response) => response.json());
+		.then((response) => response.json())
+		.catch(async (err) => {
+			console.error(err);
+			await Console(`Friends.tsx | https://apis.roblox.com/user-profile-api/v1/user/profiles/get-profiles - ${err}`);
+			Notify(locales.error || "Error", locales.error_message || "An error occurred; check the console for more details.");
+		});
 
 		const sizeBefore = friends.size;
 		for (const friend of profiles.profileDetails) {
@@ -81,24 +99,25 @@ function Friends() {
 	const [userId, setUserId] = useState<string | null>(null);
 	const [friends, setFriends] = useState<{ [id: string]: Friend} | null>(null);
 	const [research, setResearch] = useState<string | null>(null);
-	const [locales, setLocales] = useState<{ [name: string]: string | null }>({});
+	const [locales, setLocales] = useState<Record<string, string>>({});
 	
 	useEffect(() => {
 		setLocales(Translates(localesToGet));
 	}, []);
 
 	useEffect(() => {
-		setPlaceId(location.href.split("/")[4]);
+		setPlaceId(getUrlParts()[1]);
+		
 		user()
 		.then((u) => {
 			if (!u) {
 				Notify("Error", "Unable to retrieve the user ID.");
-				Console("Unable to retrieve the user ID.");
+				Console("Friends.tsx | Unable to retrieve the user ID.");
 				return;
 			}
 			setUserId(u.id);
 		});
-	}, [location.href]);
+	}, []);
 
 	const setFriend = (id: string, details: any) => {
 		setFriends((old) => {
@@ -119,7 +138,9 @@ function Friends() {
 
 	useEffect(() => {
 		if (!userId || !placeId) return;
-		fetchAllFriends(userId).then(async (friends) => {
+		fetchAllFriends(userId, locales).then(async (friends) => {
+			if (friends.length === 0) return setFriends({});
+			
 			for (const friend of friends) setFriend(friend[0], friend[1]);
 			
 			getAvatar(150, "png", friends.map((friend) => friend[0])).then((avatars) => {
@@ -137,13 +158,13 @@ function Friends() {
 			})
 			.catch(async (err) => {
 				console.error(err);
-				await Console(`An error occurred while retrieving the avatars for "${friends.map((friend) => friend[0]).join("\n")}" - ${err}`);
+				await Console(`Friends.tsx | An error occurred while retrieving the avatars for "${friends.map((friend) => friend[0]).join("\n")}" - ${err}`);
 				Notify(locales.error || "Error", locales.error_message || "An error occurred; check the console for more details.");
 			});
 		})
 		.catch(async (err) => {
 			console.error(err);
-			await Console(`An error occurred while retrieving the friends list - ${err}`);
+			await Console(`Friends.tsx | An error occurred while retrieving the friends list - ${err}`);
 			Notify(locales.error || "Error", locales.error_message || "An error occurred; check the console for more details.");
 		});
 	}, [placeId, userId]);
@@ -220,7 +241,6 @@ function Friends() {
 	const container = document.createElement("div");
 	container.id = "better-badges-custom-friends-container";
 	
-
 	createRoot(container).render(<Friends  />);
 	parent.appendChild(container);
 })();

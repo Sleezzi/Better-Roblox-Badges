@@ -13,6 +13,8 @@ import browser from "webextension-polyfill";
 import Notify from "../global/Notifications";
 import Console from "../../components/console";
 import Icon from "../../components/react/Icon";
+import user from "../../components/user";
+import getUrlParts from "../../components/getUrlsParts";
 
 const localesToGet = [
 	"name",
@@ -48,6 +50,11 @@ function Options() {
 
 	const [logs, setLogs] = useState<string[] | null>(null);
 
+	const [debug, setDebug] = useState({
+		user: "not-connected",
+		locale: "International"
+	});
+
 	useEffect(() => {
 		setLocales(Translates(localesToGet));
 	}, []);
@@ -58,7 +65,7 @@ function Options() {
 		.then((avatars) => setDevelopperAvatar(avatars[Number(extension.author.roblox)]))
 		.catch(async (err) => {
 			console.error(err);
-			await Console(`Failed to retreive developper's avatar - ${err}`);
+			await Console(`Settings.tsx | Failed to retreive developper's avatar - ${err}`);
 			Notify(locales.error || "Error", locales.error_message || "An error occurred; check the console for more details.");
 		});
 	}, []);
@@ -70,11 +77,9 @@ function Options() {
 				date_format: save["date-format"] || "full_default",
 				number_split: save["number-split"] || "off",
 			});
-			if (typeof save.logs !== "string") return setLogs([]);
-			const savedLogs = JSON.parse(save.logs);
-			if (!savedLogs) return setLogs([]);
+			if (!save.logs) return setLogs([]);
 			
-			setLogs(savedLogs);
+			setLogs(save.logs);
 		});
 		
 		const onUpdated = (changes: browser.Storage.StorageAreaOnChangedChangesType) => {
@@ -100,6 +105,18 @@ function Options() {
 	useEffect(() => {
 		ParseDate(Date.now()).then((d) => setDate(d));
 	}, [settings]);
+
+	useEffect(() => {
+		user().then((profile) => {
+			const partsWithoutLocal = getUrlParts();
+			const partsUnfiltred = location.pathname.split("/").filter(Boolean);
+
+			setDebug((old) => ({
+				locale: partsUnfiltred.length === partsWithoutLocal.length ? "International" : partsUnfiltred[0],
+				user: profile ? profile.id : "not-connected"
+			}));
+		});
+	}, []);
 
 	return (
 		<>
@@ -232,25 +249,51 @@ function Options() {
 					</div>
 				</div>
 			</div>
-			<div id="logs-section">
-				{
-					logs && logs.length > 0 && <button onClick={() => {
-						const content = logs.join("\n");
-						const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
-						const url = URL.createObjectURL(blob);
+			<div id="debug-section">
+				<h3>{locales.debug || "Debug"}</h3>
+				<p>{locales.debug_description || "Copy and paste the debug data in the report's form"}</p>
+				<div>
+					<a target="_blank" href="https://better-roblox-badges.sleezzi.fr/report">{locales.debug_report || "Report an error"}</a>
+					<button onClick={() => {
+						navigator.clipboard.writeText(`Browser engine: ${navigator.userAgent.includes("Firefox") ? "Firefox" : "Chromium"} ;
+Browser locale: ${browser.i18n.getUILanguage()} ;
 
-						const a = document.createElement("a");
-						a.href = url;
-						a.download = `${new Date().toDateString()}.log`;
-						a.target = "_blank";
-						document.body.appendChild(a);
-						a.click();
-						document.body.removeChild(a);
-						URL.revokeObjectURL(url);
+UserAgent: ${navigator.userAgent} ;
+
+
+User ID: ${debug.user} ;
+
+Roblox Locale: ${debug.locale} ;
+`);
+					}}>{locales.copy || "Copy"}</button>
+				</div>
+			</div>
+			<div id="logs-section">
+				<div className="buttons">
+					<button onClick={() => {
+						navigator.clipboard.writeText(logs ? logs.join("\n") : "There are no logs.");
 					}}>
-						<Icon icon="arrow-down-to-line.png" color="currentColor" />
+						<Icon icon="copy.png" color="currentColor" />
 					</button>
-				}
+					{
+						logs && logs.length > 0 && <button onClick={() => {
+							const content = logs.join("\n");
+							const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+							const url = URL.createObjectURL(blob);
+
+							const a = document.createElement("a");
+							a.href = url;
+							a.download = `${new Date().toDateString()}.log`;
+							a.target = "_blank";
+							document.body.appendChild(a);
+							a.click();
+							document.body.removeChild(a);
+							URL.revokeObjectURL(url);
+						}}>
+							<Icon icon="arrow-down-to-line.png" color="currentColor" />
+						</button>
+					}
+				</div>
 				{
 					logs && logs.length === 0 && <i>There are no logs.</i>
 				}

@@ -2,6 +2,7 @@ import Badges from "./BadgesComponents";
 import awaitForElement from "../../components/awaitForElement";
 import { createRoot } from "react-dom/client";
 import getDetails from "../../components/api/user/getDetails";
+import getUrlParts from "../../components/getUrlsParts";
 
 (async () => {
 	const parent = await awaitForElement<"div">("#content");
@@ -12,12 +13,12 @@ import getDetails from "../../components/api/user/getDetails";
 	const container = document.createElement("div");
 	container.id = "better-badges-custom-badges-container";
 
-	const id = location.href.split("/")[5];
+	const [placeId, id] = [getUrlParts()[1], getUrlParts()[2]];
 
 	const user = await getDetails(id);
 	
 	if (!user) return;
 
-	createRoot(container).render(<Badges user={{ username: user.name, displayName: user.displayName, id: id }} placeId={location.href.split("/")[4]} />);
+	createRoot(container).render(<Badges user={{ username: user.name, displayName: user.displayName, id: id }} placeId={placeId} />);
 	parent.appendChild(container);
 })();

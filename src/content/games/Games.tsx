@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import _user from "../../components/user";
 import Console from "../../components/console";
 import Notify from "../global/Notifications";
+import getUrlParts from "../../components/getUrlsParts";
 
 (async () => {
 	const parent = await awaitForElement<"div">(".game-badges-list");
@@ -12,7 +13,7 @@ import Notify from "../global/Notifications";
 	const user = await _user();
 	if (!user) {
 		Notify("Error", "Unable to retrieve the user ID.");
-		Console("Unable to retrieve the user ID.");
+		Console("Games.tsx | Unable to retrieve the user ID.");
 		return;
 	}
 
@@ -20,7 +21,7 @@ import Notify from "../global/Notifications";
 
 	const container = document.createElement("div");
 	container.id = "better-badges-badges-container";
-	
-	createRoot(container).render(<Badges user={user} placeId={location.href.split("/")[4]} />);
+
+	createRoot(container).render(<Badges user={user} placeId={getUrlParts()[1]} />);
 	parent.appendChild(container);
 })();

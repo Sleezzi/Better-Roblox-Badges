@@ -53,24 +53,26 @@ function Badges({ placeId, user }: { placeId: string, user: User }) {
 		.then((avatars) => setAvatar(avatars[user.id as any]))
 		.catch(async (err) => {
 			console.error(err);
-			await Console(`Failed to retreive the ${user.id}'s avatar - ${err}`);
+			await Console(`BadgesComponents.tsx | Failed to retreive the ${user.id}'s avatar - ${err}`);
 			Notify(locales.error || "Error", locales.error_message || "An error occurred; check the console for more details.");
 		});
 	}, [user]);
 
 	useEffect(() => {
-	}, [location.href]);
-
-	useEffect(() => {
 		if (!placeId) return;
 		fetch(`https://apis.roblox.com/universes/v1/places/${placeId}/universe`)
 		.then((response) => response.json())
-		.then((response: { universeId: number }) => {
+		.then(async (response: { universeId: number }) => {
+			if (!response.universeId) {
+				await Console(`BadgesComponents.tsx | BadgesComponents.tsx | https://apis.roblox.com/universes/v1/places/${placeId}/universe - Invalid universeId ; ${response.universeId}`);
+				Notify(locales.error || "Error", locales.error_message || "An error occurred; check the console for more details.");
+				return;
+			}
 			setUniverseId(response.universeId);
 		})
 		.catch(async (err) => {
 			console.error(err);
-			await Console(`https://apis.roblox.com/universes/v1/places/${placeId}/universe - ${err}`);
+			await Console(`BadgesComponents.tsx | BadgesComponents.tsx | https://apis.roblox.com/universes/v1/places/${placeId}/universe - ${err}`);
 			Notify(locales.error || "Error", locales.error_message || "An error occurred; check the console for more details.");
 		});
 	}, [placeId]);
@@ -107,6 +109,7 @@ function Badges({ placeId, user }: { placeId: string, user: User }) {
 			}[],
 			nextPageCursor?: string,
 		}) => {
+			if (response.data.length === 0) return;
 			for (const badge of response.data) {
 				const result: Badge = {
 					name: badge.name,
@@ -147,7 +150,7 @@ function Badges({ placeId, user }: { placeId: string, user: User }) {
 			})
 			.catch(async (err) => {
 				console.error(err);
-				await Console(`https://thumbnails.roblox.com/v1/badges/icons?badgeIds=${response.data.map((badge) => badge.id).join(",")}&size=150x150&format=png - ${err}`);
+				await Console(`BadgesComponents.tsx | https://thumbnails.roblox.com/v1/badges/icons?badgeIds=${response.data.map((badge) => badge.id).join(",")}&size=150x150&format=png - ${err}`);
 				Notify(locales.error || "Error", locales.error_message || "An error occurred; check the console for more details.");
 			});
 
@@ -174,7 +177,7 @@ function Badges({ placeId, user }: { placeId: string, user: User }) {
 			})
 			.catch(async (err) => {
 				console.error(err);
-				await Console(`https://badges.roblox.com/v1/users/${user.id}/badges/awarded-dates?badgeIds=${response.data.map((badge) => badge.id).join(",")} - ${err}`);
+				await Console(`BadgesComponents.tsx | https://badges.roblox.com/v1/users/${user.id}/badges/awarded-dates?badgeIds=${response.data.map((badge) => badge.id).join(",")} - ${err}`);
 				Notify(locales.error || "Error", locales.error_message || "An error occurred; check the console for more details.");
 			});
 
@@ -184,7 +187,7 @@ function Badges({ placeId, user }: { placeId: string, user: User }) {
 		})
 		.catch(async (err) => {
 			console.error(err);
-			await Console(`https://badges.roblox.com/v1/universes/${universeId}/badges?limit=100&cursor=${index}&sortOrder=Asc - ${err}`);
+			await Console(`BadgesComponents.tsx | https://badges.roblox.com/v1/universes/${universeId}/badges?limit=100&cursor=${index}&sortOrder=Asc - ${err}`);
 			Notify(locales.error || "Error", locales.error_message || "An error occurred; check the console for more details.");
 		});
 	}, [universeId, index]);

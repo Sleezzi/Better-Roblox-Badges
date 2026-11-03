@@ -1,9 +1,11 @@
 import browser from "webextension-polyfill";
 
 function Translates(messages: string[]) {
-	const result: { [message: string]: string | null } = {};
+	const result: Record<string, string> = {};
 	for (const message of messages) {
-		result[message] = browser.i18n.getMessage(message) || null;
+		const translate = browser.i18n.getMessage(message);
+		if (!translate) continue;
+		result[message] = translate;
 	}
 	return result;
 }
