@@ -1,0 +1,1 @@
+"use strict";(()=>{var n=/[a-z]{2,3}(-[a-z]{2,4})?/;function r(e=location.href){let t=new URL(e).pathname.split("/").filter(Boolean);return t.length>0&&new RegExp(`^${n.source}$`).test(t[0])&&t.shift(),t}})();
